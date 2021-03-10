@@ -1,22 +1,21 @@
 const validate = (name, description, color) => {
-  const regex = /^#([0-9A-F]{3}){1,2}$/;
-
+  const errors = [];
   // name validation
   if (name === undefined || name.length === 0) {
-    return { status: 'invalid name' };
+    errors.push('invalid name');
   }
 
   // description validation
   if (description === undefined || description.length === 0) {
-    return { status: 'invalid description' };
+    errors.push('invalid description');
   }
 
   // color validation
-  if (!regex.test(color)) {
-    return { status: 'invalid color' };
+  if (!/^#([0-9A-F]{3}){1,2}$/.test(color)) {
+    errors.push('invalid color');
   }
 
-  return { status: 'valid' };
+  return errors;
 };
 
 module.exports = { validate };
