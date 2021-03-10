@@ -36,8 +36,8 @@ const categoryUpdate = async (req, res) => {
   const validacao = validation.validate(name, description, color);
 
   // Verifica a validade dos dados
-  if (validacao.status !== 'valid') {
-    return res.json(validacao);
+  if (validacao.length) {
+    return res.json({ status: validacao });
   }
 
   // Realiza a atualização
