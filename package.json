@@ -1,0 +1,22 @@
+{
+  "name": "2020-2-G4-Demands",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/fga-eps-mds/2020-2-G4-Demands.git",
+  "author": "<lucascandradex14@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.11.19",
+    "cors": "^2.8.5"
+  },
+  "scripts": {
+    "start": "nodemon src/index.js"
+  },
+  "devDependencies": {
+    "eslint": "^7.21.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "nodemon": "^2.0.7"
+  }
+}

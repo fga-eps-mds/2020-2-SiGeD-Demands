@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  api_category:
+    container_name: backend_category
+    build: .
+    ports:
+      - 3003:3003
+    environment: 
+      PORT: 3003
+    env_file: .env_db
+    volumes:
+      - ./:/code
+      - node_modules:/code/node_modules
+    networks: 
+      - backend_category
+    depends_on:
+      - db_category
+
+  db_category:
+    container_name: db_category
+    image: mongo:4.4
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: root-db
+    env_file: .env_db
+    volumes:
+      - ./db/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro
+      - ./db/.dbshell:/home/mongodb/.dbshell
+      - mongodb:/data/db
+    networks: 
+      - backend_category
+
+volumes: 
+  node_modules:
+  mongodb:
+
+networks: 
+  backend_category:
