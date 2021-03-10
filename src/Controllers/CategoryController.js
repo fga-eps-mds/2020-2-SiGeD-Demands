@@ -47,9 +47,9 @@ const categoryUpdate = async (req, res) => {
     color,
   }, { new: true }, (err, user) => {
     if (err) {
-      return res.json(err);
+      return err;
     }
-    return res.json(user);
+    return user;
   });
 
   return res.json(updateStatus);
