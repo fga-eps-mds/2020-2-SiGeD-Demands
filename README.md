@@ -55,6 +55,6 @@ Para atualizar os dados de uma categoria, envie os dados atualizados seguindo o 
 }
 ```
 
-**PUT: `/category/delete/:id`**
+**DELETE: `/category/delete/:id`**
 
 Para deletar uma categoria pelo `id`.
