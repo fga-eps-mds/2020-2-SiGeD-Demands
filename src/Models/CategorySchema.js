@@ -14,11 +14,11 @@ const categorySchema = new mongoose.Schema({
     require: true,
   },
   createdAt: {
-    type: String,
+    type: Date,
     require: true,
   },
   updatedAt: {
-    type: String,
+    type: Date,
     require: true,
   },
 });
