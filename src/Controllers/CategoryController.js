@@ -1,6 +1,6 @@
+const moment = require('moment-timezone');
 const Category = require('../Models/CategorySchema');
 const validation = require('../utils/validate');
-const moment = require('moment-timezone');
 
 const categoryGet = async (req, res) => {
   const categories = await Category.find();
@@ -17,7 +17,7 @@ const categoryCreate = async (req, res) => {
   // Verifica a validade dos dados
   if (validacao.length) {
     return res.json({ status: validacao });
-  } 
+  }
 
   // Cria a categoria
   const categoria = await Category.create({

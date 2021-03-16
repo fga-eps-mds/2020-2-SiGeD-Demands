@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const moment = require('moment-timezone');
 
 const categorySchema = new mongoose.Schema({
   name: {
@@ -14,14 +13,14 @@ const categorySchema = new mongoose.Schema({
     type: String,
     require: true,
   },
-  createdAt:{
+  createdAt: {
     type: String,
     require: true,
   },
-  updatedAt:{
+  updatedAt: {
     type: String,
     require: true,
-  }
+  },
 });
 
 module.exports = mongoose.model('Category', categorySchema);
