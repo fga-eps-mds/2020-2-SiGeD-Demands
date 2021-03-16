@@ -27,7 +27,6 @@ const categoryCreate = async (req, res) => {
     createdAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
     updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
   });
-  console.log(typeof (categoria.createdAt));
 
   return res.json(categoria);
 };
