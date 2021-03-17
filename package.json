@@ -6,9 +6,11 @@
   "author": "<lucascandradex14@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.1",
-    "mongoose": "^5.11.19",
-    "cors": "^2.8.5"
+    "moment": "^2.29.1",
+    "moment-timezone": "^0.5.33",
+    "mongoose": "^5.11.19"
   },
   "scripts": {
     "start": "nodemon src/index.js"
