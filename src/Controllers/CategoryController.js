@@ -11,16 +11,13 @@ const categoryGet = async (req, res) => {
 const categoryCreate = async (req, res) => {
   const { name, description, color } = req.body;
 
-  // Realiza a validação do nome, descrição e cor (Hex)
-  const validacao = validation.validate(name, description, color);
+  const validFields = validation.validate(name, description, color);
 
-  // Verifica a validade dos dados
-  if (validacao.length) {
-    return res.json({ status: validacao });
+  if (validFields.length) {
+    return res.json({ status: validFields });
   }
 
-  // Cria a categoria
-  const categoria = await Category.create({
+  const newCategory = await Category.create({
     name,
     description,
     color,
@@ -28,22 +25,19 @@ const categoryCreate = async (req, res) => {
     updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
   });
 
-  return res.json(categoria);
+  return res.json(newCategory);
 };
 
 const categoryUpdate = async (req, res) => {
   const { id } = req.params;
   const { name, description, color } = req.body;
 
-  // Realiza a validação do nome, descrição e cor (Hex)
-  const validacao = validation.validate(name, description, color);
+  const validFields = validation.validate(name, description, color);
 
-  // Verifica a validade dos dados
-  if (validacao.length) {
-    return res.json({ status: validacao });
+  if (validFields.length) {
+    return res.json({ status: validFields });
   }
 
-  // Realiza a atualização
   const updateStatus = await Category.findOneAndUpdate({ _id: id }, {
     name,
     description,
