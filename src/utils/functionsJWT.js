@@ -3,9 +3,6 @@ const jwt = require('jsonwebtoken');
 function verifyJWT(req, res, next) {
   const token = req.headers['x-access-token'];
 
-  console.log(token);
-  console.log(process.env.SECRET);
-
   if (!token) {
     return res.status(401).json({ auth: false, message: 'Nenhum token fornecido.' });
   }
