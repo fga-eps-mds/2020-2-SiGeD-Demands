@@ -11,7 +11,7 @@ const categoryGet = async (req, res) => {
 const categoryCreate = async (req, res) => {
   const { name, description, color } = req.body;
 
-  const validFields = validation.validate(name, description, color);
+  const validFields = validation.validateCategory(name, description, color);
 
   if (validFields.length) {
     return res.json({ status: validFields });
@@ -32,7 +32,7 @@ const categoryUpdate = async (req, res) => {
   const { id } = req.params;
   const { name, description, color } = req.body;
 
-  const validFields = validation.validate(name, description, color);
+  const validFields = validation.validateCategory(name, description, color);
 
   if (validFields.length) {
     return res.json({ status: validFields });
