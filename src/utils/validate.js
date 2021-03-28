@@ -1,4 +1,3 @@
-
 const validateOpen = (open) => {
   const regex = /^(true|false)$/;
   return regex.test(open);
@@ -7,7 +6,7 @@ const validateOpen = (open) => {
 const validateProcess = (process) => {
   const regex = /^[0-9]+$/;
   return regex.test(process);
-}
+};
 
 const validateCategory = (name, description, color) => {
   const errors = [];
