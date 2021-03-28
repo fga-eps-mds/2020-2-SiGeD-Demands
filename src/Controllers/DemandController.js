@@ -9,8 +9,10 @@ const demandGet = async (req, res) => {
 };
 
 const demandCreate = async (req, res) => {
-  const { name, description, process, category, sector } = req.body;
-  console.log( name, description, process, category, sector );
+  const {
+    name, description, process, category, sector,
+  } = req.body;
+  console.log(name, description, process, category, sector);
   const validFields = validation.validateDemand(name, description, process, category, sector);
 
   if (validFields.length) {
@@ -32,7 +34,9 @@ const demandCreate = async (req, res) => {
 
 const demandUpdate = async (req, res) => {
   const { id } = req.params;
-  const { name, description, process, category, sector } = req.body;
+  const {
+    name, description, process, category, sector,
+  } = req.body;
 
   const validFields = validation.validateDemand(name, description, process, category, sector);
 
@@ -58,37 +62,35 @@ const demandUpdate = async (req, res) => {
 };
 
 const demandClose = async (req, res) => {
-    const { id } = req.params;
-  
-    const demandFound = await Demand.findOne({ _id: id });
+  const { id } = req.params;
 
-    let { open } = demandFound;
-    
-    if (!validation.validateOpen(open)) {
-      return res.status(400).json({ message: 'invalid open value' });
+  const demandFound = await Demand.findOne({ _id: id });
+
+  let { open } = demandFound;
+
+  if (!validation.validateOpen(open)) {
+    return res.status(400).json({ message: 'invalid open value' });
+  }
+
+  open = false;
+
+  const updateReturn = await Demand.findOneAndUpdate({ _id: id }, {
+    open,
+    updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
+  },
+  { new: true }, (err, demand) => {
+    if (err) {
+      return res.status(400).json(err);
     }
-
-    open = false;
-
-    const updateReturn = await Demand.findOneAndUpdate({ _id: id }, {
-      active,
-      updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
-     },
-      { new: true }, (err, demand) => {
-        if (err) {
-          return res.status(400).json(err);
-        }
-        return res.json(demand);
-      });
-    return updateReturn;
-  };
-
-
+    return res.json(demand);
+  });
+  return updateReturn;
+};
 
 const demandId = async (req, res) => {
   const { id } = req.params;
 
-  const demand = await Category.find({ _id: id });
+  const demand = await Demand.find({ _id: id });
 
   return res.json(demand);
 };

@@ -19,22 +19,22 @@ const validateCategory = (name, description, color) => {
   } if (!color) {
     errors.push('invalid color');
   }
-  
+
   return errors;
 };
 
 const validateDemand = (name, description, process, category, sector) => {
   const errors = [];
 
-  if (!name){
+  if (!name) {
     errors.push('invalid name');
-  } if (!description){
+  } if (!description) {
     errors.push('invalid description');
-  } if (!process){
+  } if (!validateProcess(process)) {
     errors.push('invalid process');
-  } if (!category){
+  } if (!category) {
     errors.push('invalid category');
-  } if (!sector){
+  } if (!sector) {
     errors.push('invalid sector');
   }
 
