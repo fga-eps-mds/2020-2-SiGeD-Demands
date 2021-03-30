@@ -18,11 +18,15 @@ const DemandSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
-  category: {
+  categoryID: {
     type: String,
     require: true,
   },
-  sector: {
+  sectorID: {
+    type: String,
+    require: true,
+  },
+  clientID: {
     type: String,
     require: true,
   },

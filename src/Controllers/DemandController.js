@@ -10,10 +10,11 @@ const demandGet = async (req, res) => {
 
 const demandCreate = async (req, res) => {
   const {
-    name, description, process, category, sector,
+    name, description, process, categoryID, sectorID, clientID,
   } = req.body;
-  console.log(name, description, process, category, sector);
-  const validFields = validation.validateDemand(name, description, process, category, sector);
+  const validFields = validation.validateDemand(
+    name, description, process, categoryID, sectorID, clientID,
+  );
 
   if (validFields.length) {
     return res.json({ status: validFields });
@@ -23,8 +24,9 @@ const demandCreate = async (req, res) => {
     name,
     description,
     process,
-    category,
-    sector,
+    categoryID,
+    sectorID,
+    clientID,
     createdAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
     updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
   });
@@ -35,10 +37,12 @@ const demandCreate = async (req, res) => {
 const demandUpdate = async (req, res) => {
   const { id } = req.params;
   const {
-    name, description, process, category, sector,
+    name, description, process, categoryID, sectorID, clientID,
   } = req.body;
 
-  const validFields = validation.validateDemand(name, description, process, category, sector);
+  const validFields = validation.validateDemand(
+    name, description, process, categoryID, sectorID, clientID,
+  );
 
   if (validFields.length) {
     return res.json({ status: validFields });
@@ -48,8 +52,9 @@ const demandUpdate = async (req, res) => {
     name,
     description,
     process,
-    category,
-    sector,
+    categoryID,
+    sectorID,
+    clientID,
     updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
   }, { new: true }, (err, user) => {
     if (err) {
