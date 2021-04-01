@@ -10,10 +10,10 @@ const demandGet = async (req, res) => {
 
 const demandCreate = async (req, res) => {
   const {
-    name, description, process, categoryID, sectorID, clientID,
+    name, description, process, categoryID, sectorID, clientID, userID,
   } = req.body;
   const validFields = validation.validateDemand(
-    name, description, process, categoryID, sectorID, clientID,
+    name, description, process, categoryID, sectorID, clientID, userID,
   );
 
   if (validFields.length) {
@@ -27,6 +27,7 @@ const demandCreate = async (req, res) => {
     categoryID,
     sectorID,
     clientID,
+    userID,
     createdAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
     updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
   });
@@ -37,11 +38,11 @@ const demandCreate = async (req, res) => {
 const demandUpdate = async (req, res) => {
   const { id } = req.params;
   const {
-    name, description, process, categoryID, sectorID, clientID,
+    name, description, process, categoryID, sectorID, clientID, userID,
   } = req.body;
 
   const validFields = validation.validateDemand(
-    name, description, process, categoryID, sectorID, clientID,
+    name, description, process, categoryID, sectorID, clientID, userID,
   );
 
   if (validFields.length) {
@@ -55,6 +56,7 @@ const demandUpdate = async (req, res) => {
     categoryID,
     sectorID,
     clientID,
+    userID,
     updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
   }, { new: true }, (err, user) => {
     if (err) {

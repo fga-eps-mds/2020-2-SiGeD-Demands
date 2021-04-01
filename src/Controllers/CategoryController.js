@@ -68,7 +68,7 @@ const categoryDelete = async (req, res) => {
 const categoryId = async (req, res) => {
   const { id } = req.params;
 
-  const category = await Category.find({ _id: id });
+  const category = await Category.findOne({ _id: id });
 
   return res.json(category);
 };

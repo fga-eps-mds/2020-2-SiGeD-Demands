@@ -22,7 +22,9 @@ const validateCategory = (name, description, color) => {
   return errors;
 };
 
-const validateDemand = (name, description, process, category, sector) => {
+const validateDemand = (
+  name, description, process, categoryID, sectorID, clientID, userID,
+) => {
   const errors = [];
 
   if (!name) {
@@ -31,10 +33,14 @@ const validateDemand = (name, description, process, category, sector) => {
     errors.push('invalid description');
   } if (!validateProcess(process)) {
     errors.push('invalid process');
-  } if (!category) {
-    errors.push('invalid category');
-  } if (!sector) {
-    errors.push('invalid sector');
+  } if (!categoryID) {
+    errors.push('invalid category id');
+  } if (!sectorID) {
+    errors.push('invalid sector id');
+  } if (!clientID) {
+    errors.push('invalid client id');
+  } if (!userID) {
+    errors.push('invalid user id');
   }
 
   return errors;

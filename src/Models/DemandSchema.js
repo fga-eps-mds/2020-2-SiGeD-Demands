@@ -30,6 +30,10 @@ const DemandSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
+  userID: {
+    type: String,
+    require: true,
+  },
   createdAt: {
     type: Date,
     require: true,
