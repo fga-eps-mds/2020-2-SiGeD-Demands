@@ -97,7 +97,7 @@ const demandClose = async (req, res) => {
 const demandId = async (req, res) => {
   const { id } = req.params;
 
-  const demand = await Demand.find({ _id: id });
+  const demand = await Demand.findOne({ _id: id });
 
   return res.json(demand);
 };
