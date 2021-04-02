@@ -1,19 +1,49 @@
-const validate = (name, description, color) => {
+const validateOpen = (open) => {
+  const regex = /^(true|false)$/;
+  return regex.test(open);
+};
+
+const validateProcess = (process) => {
+  const regex = /^[0-9]+$/;
+  return regex.test(process);
+};
+
+const validateCategory = (name, description, color) => {
   const errors = [];
 
   if (!name) {
     errors.push('invalid name');
-  }
-
-  if (!description) {
+  } if (!description) {
     errors.push('invalid description');
-  }
-
-  if (!color) {
+  } if (!color) {
     errors.push('invalid color');
   }
 
   return errors;
 };
 
-module.exports = { validate };
+const validateDemand = (
+  name, description, process, categoryID, sectorID, clientID, userID,
+) => {
+  const errors = [];
+
+  if (!name) {
+    errors.push('invalid name');
+  } if (!description) {
+    errors.push('invalid description');
+  } if (!validateProcess(process)) {
+    errors.push('invalid process');
+  } if (!categoryID) {
+    errors.push('invalid category id');
+  } if (!sectorID) {
+    errors.push('invalid sector id');
+  } if (!clientID) {
+    errors.push('invalid client id');
+  } if (!userID) {
+    errors.push('invalid user id');
+  }
+
+  return errors;
+};
+
+module.exports = { validateCategory, validateDemand, validateOpen };

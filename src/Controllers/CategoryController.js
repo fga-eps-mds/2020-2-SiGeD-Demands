@@ -11,10 +11,10 @@ const categoryGet = async (req, res) => {
 const categoryCreate = async (req, res) => {
   const { name, description, color } = req.body;
 
-  const validFields = validation.validate(name, description, color);
+  const validFields = validation.validateCategory(name, description, color);
 
   if (validFields.length) {
-    return res.json({ status: validFields });
+    return res.status(400).json({ status: validFields });
   }
 
   const newCategory = await Category.create({
@@ -32,45 +32,46 @@ const categoryUpdate = async (req, res) => {
   const { id } = req.params;
   const { name, description, color } = req.body;
 
-  const validFields = validation.validate(name, description, color);
+  const validFields = validation.validateCategory(name, description, color);
 
   if (validFields.length) {
-    return res.json({ status: validFields });
+    return res.status(400).json({ status: validFields });
   }
 
-  const updateStatus = await Category.findOneAndUpdate({ _id: id }, {
-    name,
-    description,
-    color,
-    updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
-  }, { new: true }, (err, user) => {
-    if (err) {
-      return err;
-    }
-    return user;
-  });
-
-  return res.json(updateStatus);
+  try {
+    const updateStatus = await Category.findOneAndUpdate({ _id: id }, {
+      name,
+      description,
+      color,
+      updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
+    }, { new: true }, (user) => user);
+    return res.json(updateStatus);
+  } catch {
+    return res.status(400).json({ err: 'invalid id' });
+  }
 };
 
 const categoryDelete = async (req, res) => {
   const { id } = req.params;
 
-  const deleteStatus = await Category.deleteOne({ _id: id });
+  try {
+    await Category.deleteOne({ _id: id });
 
-  if (deleteStatus.deletedCount !== 1) {
-    return res.json({ message: 'failure' });
+    return res.json({ message: 'success' });
+  } catch (error) {
+    return res.status(400).json({ message: 'failure' });
   }
-
-  return res.json({ message: 'success' });
 };
 
 const categoryId = async (req, res) => {
   const { id } = req.params;
 
-  const category = await Category.find({ _id: id });
-
-  return res.json(category);
+  try {
+    const category = await Category.findOne({ _id: id });
+    return res.status(200).json(category);
+  } catch {
+    return res.status(400).json({ err: 'Invalid ID' });
+  }
 };
 
 module.exports = {
