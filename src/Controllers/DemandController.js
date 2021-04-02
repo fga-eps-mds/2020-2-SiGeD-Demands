@@ -17,7 +17,7 @@ const demandCreate = async (req, res) => {
   );
 
   if (validFields.length) {
-    return res.json({ status: validFields });
+    return res.status(400).json({ status: validFields });
   }
 
   const newDemand = await Demand.create({
@@ -46,7 +46,7 @@ const demandUpdate = async (req, res) => {
   );
 
   if (validFields.length) {
-    return res.json({ status: validFields });
+    return res.status(400).json({ status: validFields });
   }
 
   const updateStatus = await Demand.findOneAndUpdate({ _id: id }, {
@@ -71,35 +71,32 @@ const demandUpdate = async (req, res) => {
 const demandClose = async (req, res) => {
   const { id } = req.params;
 
-  const demandFound = await Demand.findOne({ _id: id });
+  try {
+    const demandFound = await Demand.findOne({ _id: id });
 
-  let { open } = demandFound;
+    let { open } = demandFound;
 
-  if (!validation.validateOpen(open)) {
-    return res.status(400).json({ message: 'invalid open value' });
+    open = false;
+
+    const updateStatus = await Demand.findOneAndUpdate({ _id: id }, {
+      open,
+      updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
+    }, { new: true }, (demand) => demand);
+    return res.json(updateStatus);
+  } catch {
+    return res.status(400).json({ err: 'Invalid ID' });
   }
-
-  open = false;
-
-  const updateReturn = await Demand.findOneAndUpdate({ _id: id }, {
-    open,
-    updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
-  },
-  { new: true }, (err, demand) => {
-    if (err) {
-      return res.status(400).json(err);
-    }
-    return res.json(demand);
-  });
-  return updateReturn;
 };
 
 const demandId = async (req, res) => {
   const { id } = req.params;
 
-  const demand = await Demand.findOne({ _id: id });
-
-  return res.json(demand);
+  try {
+    const demand = await Demand.findOne({ _id: id });
+    return res.status(200).json(demand);
+  } catch {
+    return res.status(400).json({ err: 'Invalid ID' });
+  }
 };
 
 module.exports = {
