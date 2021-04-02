@@ -49,23 +49,21 @@ const demandUpdate = async (req, res) => {
     return res.status(400).json({ status: validFields });
   }
 
-  const updateStatus = await Demand.findOneAndUpdate({ _id: id }, {
-    name,
-    description,
-    process,
-    categoryID,
-    sectorID,
-    clientID,
-    userID,
-    updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
-  }, { new: true }, (err, user) => {
-    if (err) {
-      return err;
-    }
-    return user;
-  });
-
-  return res.json(updateStatus);
+  try {
+    const updateStatus = await Demand.findOneAndUpdate({ _id: id }, {
+      name,
+      description,
+      process,
+      categoryID,
+      sectorID,
+      clientID,
+      userID,
+      updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
+    }, { new: true }, (user) => user);
+    return res.json(updateStatus);
+  } catch {
+    return res.status(400).json({ err: 'invalid id' });
+  }
 };
 
 const demandClose = async (req, res) => {
