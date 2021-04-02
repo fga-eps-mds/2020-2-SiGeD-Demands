@@ -79,8 +79,8 @@ describe('Sample Test', () => {
   it('Get id demand', async (done) => {
     const res = await request(app).get(`/demand/${id}`).set('x-access-token', token);
     expect(res.statusCode).toBe(200);
-    expect(res.body.name).toBe(sector.name);
-    expect(res.body.description).toBe(sector.description);
+    expect(res.body.name).toBe(demand.name);
+    expect(res.body.description).toBe(demand.description);
     expect(res.body.process).toBe(demand.process);
     expect(res.body.categoryID).toBe(demand.categoryID);
     expect(res.body.sectorID).toBe(demand.sectorID);
@@ -99,7 +99,13 @@ describe('Sample Test', () => {
 it('Close demand', async (done) => {
     const res = await request(app).put(`/demand/close/${id}`).set('x-access-token', token)
     expect(res.statusCode).toBe(200);
-    expect(res.body).toEqual({"message":"success"});
+    expect(res.body.name).toBe(demand.name);
+    expect(res.body.description).toBe(demand.description);
+    expect(res.body.process).toBe(demand.process);
+    expect(res.body.categoryID).toBe(demand.categoryID);
+    expect(res.body.sectorID).toBe(demand.sectorID);
+    expect(res.body.clientID).toBe(demand.clientID);
+    expect(res.body.userID).toBe(demand.userID);
     done();
   });
 
@@ -107,6 +113,148 @@ it('Close demand', async (done) => {
     const res = await request(app).put('/demand/close/123456789').set('x-access-token', token)
     expect(res.statusCode).toBe(400);
     expect(res.body.err).toBe("Invalid ID");
+    done();
+  });
+
+  const category = {
+    name: 'Nome da Categoria',
+    description: 'Descrição da Demanda',
+    color: '#000000'
+  };
+
+  it('Post category', async (done) => {
+    const res = await request(app).post('/category/create').set('x-access-token', token).send(category);
+    expect(res.statusCode).toBe(200);
+    expect(res.body.name).toBe(category.name);
+    expect(res.body.description).toBe(category.description);
+    expect(res.body.color).toBe(category.color);
+    category_id = res.body._id;
+    done();
+  });
+
+  it('Post category error', async (done) => {
+    const errorCategory = {
+      name: '',
+      description: '',
+      color: ''
+    };
+
+    const res = await request(app).post('/category/create').set('x-access-token', token).send(errorCategory);
+    expect(res.statusCode).toBe(400);
+    expect(res.body.status).toEqual(['invalid name', 'invalid description', 'invalid color']);
+    done();
+  });
+
+  it('Get category', async (done) => {
+    const res = await request(app).get('/category/').set('x-access-token', token);
+    expect(res.statusCode).toBe(200);
+    done();
+  });
+
+  it('Get id category', async (done) => {
+    const res = await request(app).get(`/category/${category_id}`).set('x-access-token', token);
+    expect(res.statusCode).toBe(200);
+    expect(res.body.name).toBe(category.name);
+    expect(res.body.description).toBe(category.description);
+    expect(res.body.color).toBe(category.color);
+    done();
+  });
+
+  it('Get id category error', async (done) => {
+    const res = await request(app).get('/category/12345678912345678912345').set('x-access-token', token);
+    expect(res.statusCode).toBe(400);
+    expect(res.body.err).toBe("Invalid ID");
+    done();
+  });
+
+  it('Update category', async () => {
+    const category = {
+        name: "porte de arma",
+        description: "avaliação psicológica",
+        color: "#000000"
+    };
+
+    const res = await request(app)
+    .put(`/category/update/${category_id}`)
+    .set('x-access-token', token)
+    .send(category);
+    expect(res.statusCode).toBe(200);
+    expect(res.body.name).toBe(category.name);
+    expect(res.body.description).toBe(category.description);
+    expect(res.body.color).toBe(category.color);
+});
+
+it('Update category error', async () => {
+    const category = {
+        name: "",
+        description: "Jest description",
+        color: "#000000"
+    }
+
+    const res = await request(app)
+    .put(`/category/update/${category_id}`)
+    .set('x-access-token', token)
+    .send(category);
+    expect(res.statusCode).toBe(400);
+    expect(res.body.status).toEqual([ 'invalid name' ]);
+});
+
+it('Update with invalid id', async () => {
+    const category = {
+        name: "porte de arma",
+        description: "avaliação psicológica",
+        color: "#000000"
+    };
+
+    const res = await request(app)
+    .put(`/category/update/123abc`)
+    .set('x-access-token', token)
+    .send(category)
+    expect(res.statusCode).toBe(400);
+    expect(res.body.err).toBe('invalid id')
+});
+
+it('Update sector without token', async () => {
+    const sector = {
+        name: "Jest test",
+        description: "Jest description",
+        color: "#000000"
+    }
+
+    const res = await request(app)
+    .put(`/category/update/${category_id}`)
+    .send(sector);
+    expect(res.statusCode).toBe(401);
+    expect(res.body).toEqual({ auth: false, message: 'No token was provided' });
+});
+
+it('Update category with invalid token', async () => {
+    const tokenFalho = 'abc123';
+    const category = {
+        name: "Jest test",
+        description: "Jest description",
+        color:  "#000000"
+    }
+
+    const res = await request(app)
+    .put(`/category/update/${category_id}`)
+    .set('x-access-token', tokenFalho)
+    .send(category);
+    expect(res.statusCode).toBe(500);
+    expect(res.body).toEqual({ auth: false, message: 'It was not possible to authenticate the token.' });
+});
+
+it('Delete category', async (done) => {
+    const res = await request(app).delete(`/category/delete/${category_id}`).set('x-access-token', token)
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual({"message":"success"});
+    done();
+  });
+
+  it('Delete category error', async (done) => {
+    const res = await request(app).delete('/category/delete/09876543210987654321').set('x-access-token', token)
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toEqual({"message":"failure"});
     done();
   });
 });
