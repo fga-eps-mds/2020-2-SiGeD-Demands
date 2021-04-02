@@ -1,0 +1,14 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+  
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Tests check
+      run: docker-compose run api_category bash -c  "yarn && yarn jest --coverage --forceExit"
+
