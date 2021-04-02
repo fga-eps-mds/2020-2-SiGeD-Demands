@@ -99,13 +99,13 @@ describe('Sample Test', () => {
 it('Close demand', async (done) => {
     const res = await request(app).put(`/demand/close/${id}`).set('x-access-token', token)
     expect(res.statusCode).toBe(200);
-    expect(res.body.name).toBe(demand.name);
-    expect(res.body.description).toBe(demand.description);
-    expect(res.body.process).toBe(demand.process);
     expect(res.body.categoryID).toBe(demand.categoryID);
-    expect(res.body.sectorID).toBe(demand.sectorID);
+    expect(res.body.name).toBe(demand.name);
     expect(res.body.clientID).toBe(demand.clientID);
+    expect(res.body.process).toBe(demand.process);
+    expect(res.body.sectorID).toBe(demand.sectorID);
     expect(res.body.userID).toBe(demand.userID);
+    expect(res.body.description).toBe(demand.description);
     done();
   });
 
