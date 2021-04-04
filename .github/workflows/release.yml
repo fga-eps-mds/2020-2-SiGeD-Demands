@@ -1,0 +1,28 @@
+name: Release
+
+on:
+
+  push:
+    branches: [ development ]
+    
+jobs:
+  pre-release:
+    name: "Release"
+    runs-on: "ubuntu-latest"
+    
+    steps:
+      - uses: actions/checkout@v2
+      - run: mkdir -p /tmp/sonar/
+      - run: curl --location --request GET "${{ secrets.DEMANDS_URL }}" > /tmp/sonar/demands_sonar.json
+      - uses: actions/upload-artifact@v2
+        with:
+          name: demands_sonar.json
+          path: /tmp/sonar/demands_sonar.json
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.ACCESS_TOKEN }}"
+          automatic_release_tag: "latest"
+          title: "Release"
+          prerelease: False
+          files: |
+            /tmp/sonar/demands_sonar.json
