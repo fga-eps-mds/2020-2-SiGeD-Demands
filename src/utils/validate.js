@@ -8,6 +8,14 @@ const validateProcess = (process) => {
   return regex.test(process);
 };
 
+const validateSectorID = (sectorID) => {
+  const errors = [];
+  if (!sectorID) {
+    errors.push('invalid sectorID');
+  }
+  return errors;
+};
+
 const validateCategory = (name, description, color) => {
   const errors = [];
 
@@ -46,4 +54,26 @@ const validateDemand = (
   return errors;
 };
 
-module.exports = { validateCategory, validateDemand, validateOpen };
+const validateDemandUpdate = (
+  userName, description, visibilityRestriction,
+) => {
+  const errors = [];
+
+  if (!userName) {
+    errors.push('invalid name');
+  } if (!description) {
+    errors.push('invalid description');
+  } if (!validateOpen(visibilityRestriction)) {
+    errors.push('invalid process');
+  }
+
+  return errors;
+};
+
+module.exports = {
+  validateCategory,
+  validateDemand,
+  validateOpen,
+  validateDemandUpdate,
+  validateSectorID,
+};
