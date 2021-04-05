@@ -60,11 +60,11 @@ const validateDemandUpdate = (
   const errors = [];
 
   if (!userName) {
-    errors.push('invalid name');
+    errors.push('invalid userName');
   } if (!description) {
     errors.push('invalid description');
   } if (!validateOpen(visibilityRestriction)) {
-    errors.push('invalid process');
+    errors.push('invalid visibilityRestriction');
   }
 
   return errors;
@@ -77,3 +77,4 @@ module.exports = {
   validateDemandUpdate,
   validateSectorID,
 };
+
