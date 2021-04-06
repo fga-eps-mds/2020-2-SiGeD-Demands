@@ -196,36 +196,38 @@ it('Create Demand Update', async (done) => {
 });
 
 it('Create Demand Update userName error', async (done) => {
-  const demandUpdate = {
+  const userNameError = {
       userName: "",
       description: "Descrição da Atualização de Demanda",
       visibilityRestriction: true
   };
-  const res = await request(app).put(`/demand/create-demand-update/${id}`).set('x-access-token', token).send(demandUpdate);
+  const res = await request(app).put(`/demand/create-demand-update/${id}`).set('x-access-token', token).send(userNameError);
   expect(res.statusCode).toBe(400);
   expect(res.body.status).toEqual([ 'invalid userName' ]);
   done();
 });
 
 it('Create Demand Update description error', async (done) => {
-  const demandUpdate = {
+  const descriptionError = {
       userName: "Nome do Usuário",
+      visibilityRestriction: true,
       description: "",
       visibilityRestriction: true
   };
-  const res = await request(app).put(`/demand/create-demand-update/${id}`).set('x-access-token', token).send(demandUpdate);
+  const res = await request(app).put(`/demand/create-demand-update/${id}`).set('x-access-token', token).send(descriptionError);
+  expect(res.body.status).toEqual([ 'invalid description' ]);
   expect(res.statusCode).toBe(400);
   expect(res.body.status).toEqual([ 'invalid description' ]);
   done();
 });
 
 it('Create Demand Update visibilityRestriction error', async (done) => {
-  const demandUpdate = {
+  const visibilityRestrictionError = {
       userName: "Nome do Usuário",
       description: "Descrição da Atualização de Demanda",
       visibilityRestriction: ""
   };
-  const res = await request(app).put(`/demand/create-demand-update/${id}`).set('x-access-token', token).send(demandUpdate);
+  const res = await request(app).put(`/demand/create-demand-update/${id}`).set('x-access-token', token).send(visibilityRestrictionError);
   expect(res.statusCode).toBe(400);
   expect(res.body.status).toEqual([ 'invalid visibilityRestriction' ]);
   done();
