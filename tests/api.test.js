@@ -210,7 +210,6 @@ it('Create Demand Update userName error', async (done) => {
 it('Create Demand Update description error', async (done) => {
   const descriptionError = {
       userName: "Nome do Usuário",
-      visibilityRestriction: true,
       description: "",
       visibilityRestriction: true
   };
