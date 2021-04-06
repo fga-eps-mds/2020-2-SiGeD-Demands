@@ -207,7 +207,7 @@ it('Create Demand Update userName error', async (done) => {
   done();
 });
 
-it('Create Demand Update userName error', async (done) => {
+it('Create Demand Update description error', async (done) => {
   const demandUpdate = {
       userName: "Nome do Usuário",
       description: "",
@@ -219,7 +219,7 @@ it('Create Demand Update userName error', async (done) => {
   done();
 });
 
-it('Create Demand Update userName error', async (done) => {
+it('Create Demand Update visibilityRestriction error', async (done) => {
   const demandUpdate = {
       userName: "Nome do Usuário",
       description: "Descrição da Atualização de Demanda",
