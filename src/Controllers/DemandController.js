@@ -219,4 +219,3 @@ module.exports = {
   forwardDemand,
   createDemandUpdate,
 };
-
