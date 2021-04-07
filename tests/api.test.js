@@ -109,6 +109,20 @@ it('Close demand', async (done) => {
     done();
   });
 
+  it('Get false demand', async (done) => {
+    const res = await request(app).get('/demand?open=false').set('x-access-token', token);
+    expect(res.statusCode).toBe(200);
+    expect(res.body[0].categoryID).toBe(demand.categoryID);
+    expect(res.body[0].name).toBe(demand.name);
+    expect(res.body[0].clientID).toBe(demand.clientID);
+    expect(res.body[0].process).toBe(demand.process);
+    expect(res.body[0].sectorID).toBe(demand.sectorID);
+    expect(res.body[0].userID).toBe(demand.userID);
+    expect(res.body[0].description).toBe(demand.description);
+    expect(res.body[0].open).toBe(false);
+    done();
+  });
+
   it('Close demand error', async (done) => {
     const res = await request(app).put('/demand/close/123456789').set('x-access-token', token)
     expect(res.statusCode).toBe(400);
