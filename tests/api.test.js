@@ -211,7 +211,6 @@ it('Create Demand Update description error', async (done) => {
       visibilityRestriction: true
   };
   const res = await request(app).put(`/demand/create-demand-update/${id}`).set('x-access-token', token).send(descriptionError);
-  expect(res.body.status).toEqual([ 'invalid description' ]);
   expect(res.statusCode).toBe(400);
   expect(res.body.status).toEqual([ 'invalid description' ]);
   done();
