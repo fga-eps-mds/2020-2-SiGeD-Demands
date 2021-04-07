@@ -3,7 +3,12 @@ const Demand = require('../Models/DemandSchema');
 const validation = require('../utils/validate');
 
 const demandGet = async (req, res) => {
-  const demands = await Demand.find();
+  const { open } = req.query;
+  if (open === 'false') {
+    const demands = await Demand.find({ open });
+    return res.json(demands);
+  }
+  const demands = await Demand.find({ open: true });
 
   return res.json(demands);
 };
