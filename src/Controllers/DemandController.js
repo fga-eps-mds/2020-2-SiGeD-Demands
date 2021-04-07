@@ -13,9 +13,8 @@ const demandCreate = async (req, res) => {
     name, description, process, categoryID, sectorID, clientID, userID,
   } = req.body;
   const validFields = validation.validateDemand(
-    name, description, process, categoryID, sectorID, clientID, userID,
+    name, description, categoryID, sectorID, clientID, userID,
   );
-
   if (validFields.length) {
     return res.status(400).json({ status: validFields });
   }
@@ -23,7 +22,7 @@ const demandCreate = async (req, res) => {
   const newDemand = await Demand.create({
     name,
     description,
-    process,
+    process: process ? process : '',
     categoryID,
     sectorHistory: {
       sectorID,
@@ -46,7 +45,7 @@ const demandUpdate = async (req, res) => {
   } = req.body;
 
   const validFields = validation.validateDemand(
-    name, description, process, categoryID, sectorID, clientID, userID,
+    name, description, categoryID, sectorID, clientID, userID,
   );
 
   if (validFields.length) {
@@ -56,7 +55,7 @@ const demandUpdate = async (req, res) => {
   const updateStatus = await Demand.findOneAndUpdate({ _id: id }, {
     name,
     description,
-    process,
+    process: process ? process : '',
     categoryID,
     sectorHistory: {
       sectorID,
