@@ -11,14 +11,6 @@ const validateSectorID = (sectorID) => {
   return errors;
 };
 
-const validateSectorID = (sectorID) => {
-  const errors = [];
-  if (!sectorID) {
-    errors.push('invalid sectorID');
-  }
-  return errors;
-};
-
 const validateCategory = (name, description, color) => {
   const errors = [];
 

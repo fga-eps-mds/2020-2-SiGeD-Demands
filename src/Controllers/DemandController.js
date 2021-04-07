@@ -22,7 +22,7 @@ const demandCreate = async (req, res) => {
   const newDemand = await Demand.create({
     name,
     description,
-    process: process ? process : '',
+    process: process || '',
     categoryID,
     sectorHistory: {
       sectorID,
@@ -55,7 +55,7 @@ const demandUpdate = async (req, res) => {
   const updateStatus = await Demand.findOneAndUpdate({ _id: id }, {
     name,
     description,
-    process: process ? process : '',
+    process: process || '',
     categoryID,
     sectorHistory: {
       sectorID,
