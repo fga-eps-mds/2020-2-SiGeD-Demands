@@ -13,9 +13,8 @@ const demandCreate = async (req, res) => {
     name, description, process, categoryID, sectorID, clientID, userID,
   } = req.body;
   const validFields = validation.validateDemand(
-    name, description, process, categoryID, sectorID, clientID, userID,
+    name, description, categoryID, sectorID, clientID, userID,
   );
-
   if (validFields.length) {
     return res.status(400).json({ status: validFields });
   }
@@ -23,9 +22,13 @@ const demandCreate = async (req, res) => {
   const newDemand = await Demand.create({
     name,
     description,
-    process,
+    process: process || '',
     categoryID,
-    sectorID,
+    sectorHistory: {
+      sectorID,
+      createdAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
+      updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
+    },
     clientID,
     userID,
     createdAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
@@ -42,7 +45,7 @@ const demandUpdate = async (req, res) => {
   } = req.body;
 
   const validFields = validation.validateDemand(
-    name, description, process, categoryID, sectorID, clientID, userID,
+    name, description, categoryID, sectorID, clientID, userID,
   );
 
   if (validFields.length) {
@@ -52,9 +55,11 @@ const demandUpdate = async (req, res) => {
   const updateStatus = await Demand.findOneAndUpdate({ _id: id }, {
     name,
     description,
-    process,
+    process: process || '',
     categoryID,
-    sectorID,
+    sectorHistory: {
+      sectorID,
+    },
     clientID,
     userID,
     updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
@@ -99,6 +104,117 @@ const demandId = async (req, res) => {
   }
 };
 
+const updateSectorDemand = async (req, res) => {
+  const { id } = req.params;
+
+  const {
+    sectorID,
+  } = req.body;
+
+  const validFields = validation.validateSectorID(
+    sectorID,
+  );
+
+  if (validFields.length) {
+    return res.status(400).json({ status: validFields });
+  }
+
+  try {
+    const demandFound = await Demand.findOne({ _id: id });
+
+    demandFound.sectorHistory[
+      demandFound.sectorHistory.length - 1
+    ].sectorID = sectorID;
+
+    demandFound.sectorHistory[
+      demandFound.sectorHistory.length - 1
+    ].updatedAt = moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate();
+
+    const updateStatus = await Demand.findOneAndUpdate({ _id: id }, {
+      sectorHistory: demandFound.sectorHistory,
+      updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
+    }, { new: true }, (user) => user);
+    return res.json(updateStatus);
+  } catch {
+    return res.status(400).json({ err: 'Invalid ID' });
+  }
+};
+
+const forwardDemand = async (req, res) => {
+  const { id } = req.params;
+
+  const {
+    sectorID,
+  } = req.body;
+
+  const validField = validation.validateSectorID(
+    sectorID,
+  );
+
+  if (validField.length) {
+    return res.status(400).json({ status: validField });
+  }
+
+  try {
+    const demandFound = await Demand.findOne({ _id: id });
+
+    demandFound.sectorHistory = demandFound.sectorHistory.push({
+      sectorID,
+      createdAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
+      updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
+    });
+
+    const updateStatus = await Demand.findOneAndUpdate({ _id: id }, {
+      sectorHistory: demandFound.sectorHistory,
+    }, { new: true }, (user) => user);
+    return res.json(updateStatus);
+  } catch {
+    return res.status(400).json({ err: 'Invalid ID' });
+  }
+};
+
+const createDemandUpdate = async (req, res) => {
+  const { id } = req.params;
+
+  const {
+    userName, description, visibilityRestriction,
+  } = req.body;
+
+  const validFields = validation.validateDemandUpdate(
+    userName, description, visibilityRestriction,
+  );
+
+  if (validFields.length) {
+    return res.status(400).json({ status: validFields });
+  }
+
+  try {
+    const demandFound = await Demand.findOne({ _id: id });
+
+    demandFound.updateList = demandFound.updateList.push({
+      userName,
+      description,
+      visibilityRestriction,
+      createdAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
+      updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
+    });
+
+    const updateStatus = await Demand.findOneAndUpdate({ _id: id }, {
+      updateList: demandFound.updateList,
+    }, { new: true }, (user) => user);
+    return res.json(updateStatus);
+  } catch {
+    return res.status(400).json({ err: 'Invalid ID' });
+  }
+};
+
 module.exports = {
-  demandGet, demandCreate, demandUpdate, demandClose, demandId,
+  demandGet,
+  demandCreate,
+  demandUpdate,
+  demandClose,
+  demandId,
+  updateSectorDemand,
+  forwardDemand,
+  createDemandUpdate,
 };
