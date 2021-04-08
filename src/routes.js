@@ -14,6 +14,6 @@ routes.get('/demand', verifyJWT, DemandController.demandGet);
 routes.get('/demand/:id', verifyJWT, DemandController.demandId);
 routes.post('/demand/create', verifyJWT, DemandController.demandCreate);
 routes.put('/demand/update/:id', verifyJWT, DemandController.demandUpdate);
-routes.put('/demand/close/:id', verifyJWT, DemandController.demandClose);
+routes.put('/demand/toggle/:id', verifyJWT, DemandController.toggleDemand);
 
 module.exports = routes;
