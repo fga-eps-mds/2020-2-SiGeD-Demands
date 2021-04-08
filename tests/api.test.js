@@ -13,6 +13,16 @@ describe('Sample Test', () => {
     clientID: '6054dacb934bd000d7ca623b',
     userID: '60578028cb9349004580fb8d'
   };
+  const falseDemand = {
+    name: 'Nome da Demanda',
+    description: 'Descrição da Demanda',
+    process: '000000',
+    categoryID: '6064ffa9942d5e008c07e61a',
+    sectorID: '6064ffa9942d5e008c0734dc',
+    clientID: '6054dacb934bd000d7ca623b',
+    userID: '60578028cb9349004580fb8d',
+    open: false
+  };
 
   const token = jwt.sign({
     name: "Teste",
@@ -41,6 +51,20 @@ describe('Sample Test', () => {
     expect(res.body.sectorID).toBe(demand.sectorID);
     expect(res.body.clientID).toBe(demand.clientID);
     expect(res.body.userID).toBe(demand.userID);
+    id = res.body._id;
+    done();
+  });
+
+  it('Post false demand', async (done) => {
+    const res = await request(app).post('/demand/create').set('x-access-token', token).send(falseDemand);
+    expect(res.statusCode).toBe(200);
+    expect(res.body.name).toBe(falseDemand.name);
+    expect(res.body.description).toBe(falseDemand.description);
+    expect(res.body.process).toBe(falseDemand.process);
+    expect(res.body.categoryID).toBe(falseDemand.categoryID);
+    expect(res.body.sectorID).toBe(falseDemand.sectorID);
+    expect(res.body.clientID).toBe(falseDemand.clientID);
+    expect(res.body.userID).toBe(falseDemand.userID);
     id = res.body._id;
     done();
   });
@@ -97,7 +121,7 @@ describe('Sample Test', () => {
   });
 
 it('Close demand', async (done) => {
-    const res = await request(app).put(`/demand/close/${id}`).set('x-access-token', token)
+    const res = await request(app).put(`/demand/toggle/${id}`).set('x-access-token', token)
     expect(res.statusCode).toBe(200);
     expect(res.body.categoryID).toBe(demand.categoryID);
     expect(res.body.name).toBe(demand.name);
@@ -112,19 +136,19 @@ it('Close demand', async (done) => {
   it('Get false demand', async (done) => {
     const res = await request(app).get('/demand?open=false').set('x-access-token', token);
     expect(res.statusCode).toBe(200);
-    expect(res.body[0].categoryID).toBe(demand.categoryID);
-    expect(res.body[0].name).toBe(demand.name);
-    expect(res.body[0].clientID).toBe(demand.clientID);
-    expect(res.body[0].process).toBe(demand.process);
-    expect(res.body[0].sectorID).toBe(demand.sectorID);
-    expect(res.body[0].userID).toBe(demand.userID);
-    expect(res.body[0].description).toBe(demand.description);
+    expect(res.body[0].categoryID).toBe(falseDemand.categoryID);
+    expect(res.body[0].name).toBe(falseDemand.name);
+    expect(res.body[0].clientID).toBe(falseDemand.clientID);
+    expect(res.body[0].process).toBe(falseDemand.process);
+    expect(res.body[0].sectorID).toBe(falseDemand.sectorID);
+    expect(res.body[0].userID).toBe(falseDemand.userID);
+    expect(res.body[0].description).toBe(falseDemand.description);
     expect(res.body[0].open).toBe(false);
     done();
   });
 
   it('Close demand error', async (done) => {
-    const res = await request(app).put('/demand/close/123456789').set('x-access-token', token)
+    const res = await request(app).put('/demand/toggle/123456789').set('x-access-token', token)
     expect(res.statusCode).toBe(400);
     expect(res.body.err).toBe("Invalid ID");
     done();
