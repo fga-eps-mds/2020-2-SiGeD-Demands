@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 
 describe('Sample Test', () => {
   let id;
+  let falseId;
   const demand = {
     name: 'Nome da Demanda',
     description: 'Descrição da Demanda',
@@ -72,7 +73,7 @@ describe('Sample Test', () => {
     expect(res.body.sectorHistory[0].sectorID).toBe(falseDemand.sectorID);
     expect(res.body.clientID).toBe(falseDemand.clientID);
     expect(res.body.userID).toBe(falseDemand.userID);
-    id = res.body._id;
+    falseId = res.body._id;
     done();
   });
 
