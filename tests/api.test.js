@@ -7,11 +7,18 @@ describe('Sample Test', () => {
   const demand = {
     name: 'Nome da Demanda',
     description: 'Descrição da Demanda',
-    process: '000000',
     categoryID: '6064ffa9942d5e008c07e61a',
     sectorID: '6064ffa9942d5e008c0734dc',
     clientID: '6054dacb934bd000d7ca623b',
     userID: '60578028cb9349004580fb8d'
+  };
+
+  const updatedSectorID = {
+    sectorID: 'TESTE'
+  };
+
+  const forwardSectorID = {
+    sectorID: 'TESTE 2'
   };
 
   const token = jwt.sign({
@@ -36,9 +43,9 @@ describe('Sample Test', () => {
     expect(res.statusCode).toBe(200);
     expect(res.body.name).toBe(demand.name);
     expect(res.body.description).toBe(demand.description);
-    expect(res.body.process).toBe(demand.process);
+    expect(res.body.process).toBe('');
     expect(res.body.categoryID).toBe(demand.categoryID);
-    expect(res.body.sectorID).toBe(demand.sectorID);
+    expect(res.body.sectorHistory[0].sectorID).toBe(demand.sectorID);
     expect(res.body.clientID).toBe(demand.clientID);
     expect(res.body.userID).toBe(demand.userID);
     id = res.body._id;
@@ -49,7 +56,6 @@ describe('Sample Test', () => {
     const errorDemand = {
       name: '',
       description: '',
-      process: '',
       categoryID: '',
       sectorID: '',
       clientID: '',
@@ -61,7 +67,6 @@ describe('Sample Test', () => {
     expect(res.body.status).toEqual([
       'invalid name',
       'invalid description',
-      'invalid process',
       'invalid category id',
       'invalid sector id',
       'invalid client id',
@@ -81,9 +86,9 @@ describe('Sample Test', () => {
     expect(res.statusCode).toBe(200);
     expect(res.body.name).toBe(demand.name);
     expect(res.body.description).toBe(demand.description);
-    expect(res.body.process).toBe(demand.process);
+    expect(res.body.process).toBe('');
     expect(res.body.categoryID).toBe(demand.categoryID);
-    expect(res.body.sectorID).toBe(demand.sectorID);
+    expect(res.body.sectorHistory[0].sectorID).toBe(demand.sectorID);
     expect(res.body.clientID).toBe(demand.clientID);
     expect(res.body.userID).toBe(demand.userID);
     done();
@@ -102,8 +107,8 @@ it('Close demand', async (done) => {
     expect(res.body.categoryID).toBe(demand.categoryID);
     expect(res.body.name).toBe(demand.name);
     expect(res.body.clientID).toBe(demand.clientID);
-    expect(res.body.process).toBe(demand.process);
-    expect(res.body.sectorID).toBe(demand.sectorID);
+    expect(res.body.process).toBe('');
+    expect(res.body.sectorHistory[0].sectorID).toBe(demand.sectorID);
     expect(res.body.userID).toBe(demand.userID);
     expect(res.body.description).toBe(demand.description);
     done();
@@ -129,6 +134,113 @@ it('Close demand', async (done) => {
     expect(res.body.err).toBe("Invalid ID");
     done();
   });
+
+it('Update Demand Sector', async (done) => {
+  const res = await request(app).put(`/demand/sectorupdate/${id}`).set('x-access-token', token).send(updatedSectorID);
+  expect(res.statusCode).toBe(200);
+  expect(res.body.categoryID).toBe(demand.categoryID);
+  expect(res.body.name).toBe(demand.name);
+  expect(res.body.clientID).toBe(demand.clientID);
+  expect(res.body.process).toBe('');
+  expect(res.body.sectorHistory[0].sectorID).toBe(updatedSectorID.sectorID);
+  expect(res.body.userID).toBe(demand.userID);
+  expect(res.body.description).toBe(demand.description);
+  done();
+
+});
+
+it('Update Demand Sector error', async (done) => {
+  const updatedSectorID = {
+    sectorID: ''
+  };
+  const res = await request(app).put(`/demand/sectorupdate/${id}`).set('x-access-token', token).send(updatedSectorID);
+  expect(res.statusCode).toBe(400);
+  expect(res.body.status).toEqual([ 'invalid sectorID' ]);
+  done();
+});
+
+it('Forward Demand', async (done) => {
+  const res = await request(app).put(`/demand/forward/${id}`).set('x-access-token', token).send(forwardSectorID);
+  expect(res.statusCode).toBe(200);
+  expect(res.body.categoryID).toBe(demand.categoryID);
+  expect(res.body.name).toBe(demand.name);
+  expect(res.body.clientID).toBe(demand.clientID);
+  expect(res.body.process).toBe('');
+  expect(res.body.sectorHistory[0].sectorID).toBe(updatedSectorID.sectorID);
+  expect(res.body.sectorHistory[1].sectorID).toBe(forwardSectorID.sectorID);
+  expect(res.body.userID).toBe(demand.userID);
+  expect(res.body.description).toBe(demand.description);
+  done();
+
+});
+
+it('Forward Demand error', async (done) => {
+  const forwardSectorID = {
+    sectorID: ''
+  };
+  const res = await request(app).put(`/demand/forward/${id}`).set('x-access-token', token).send(forwardSectorID);
+  expect(res.statusCode).toBe(400);
+  expect(res.body.status).toEqual([ 'invalid sectorID' ]);
+  done();
+});
+
+it('Create Demand Update', async (done) => {
+  const demandUpdate = {
+      userName: "Nome do usuário",
+      description: "Descrição da Atualização de Demanda",
+      visibilityRestriction: true
+  };
+  const res = await request(app).put(`/demand/create-demand-update/${id}`).set('x-access-token', token).send(demandUpdate);
+  expect(res.statusCode).toBe(200);
+  expect(res.body.categoryID).toBe(demand.categoryID);
+  expect(res.body.name).toBe(demand.name);
+  expect(res.body.clientID).toBe(demand.clientID);
+  expect(res.body.process).toBe('');
+  expect(res.body.sectorHistory[0].sectorID).toBe(updatedSectorID.sectorID);
+  expect(res.body.sectorHistory[1].sectorID).toBe(forwardSectorID.sectorID);
+  expect(res.body.userID).toBe(demand.userID);
+  expect(res.body.description).toBe(demand.description);
+  expect(res.body.updateList[0].userName).toBe(demandUpdate.userName);
+  expect(res.body.updateList[0].description).toBe(demandUpdate.description);
+  expect(res.body.updateList[0].visibilityRestriction).toBe(demandUpdate.visibilityRestriction);
+  done();
+});
+
+it('Create Demand Update userName error', async (done) => {
+  const userNameError = {
+      userName: "",
+      description: "Descrição da Atualização de Demanda",
+      visibilityRestriction: true
+  };
+  const res = await request(app).put(`/demand/create-demand-update/${id}`).set('x-access-token', token).send(userNameError);
+  expect(res.statusCode).toBe(400);
+  expect(res.body.status).toEqual([ 'invalid userName' ]);
+  done();
+});
+
+it('Create Demand Update description error', async (done) => {
+  const descriptionError = {
+      userName: "Nome do Usuário",
+      description: "",
+      visibilityRestriction: true
+  };
+  const res = await request(app).put(`/demand/create-demand-update/${id}`).set('x-access-token', token).send(descriptionError);
+  expect(res.statusCode).toBe(400);
+  expect(res.body.status).toEqual([ 'invalid description' ]);
+  done();
+});
+
+it('Create Demand Update visibilityRestriction error', async (done) => {
+  const visibilityRestrictionError = {
+      userName: "Nome do Usuário",
+      description: "Descrição da Atualização de Demanda",
+      visibilityRestriction: ""
+  };
+  const res = await request(app).put(`/demand/create-demand-update/${id}`).set('x-access-token', token).send(visibilityRestrictionError);
+  expect(res.statusCode).toBe(400);
+  expect(res.body.status).toEqual([ 'invalid visibilityRestriction' ]);
+  done();
+});
 
   const category = {
     name: 'Nome da Categoria',
@@ -276,3 +388,4 @@ it('Delete category', async (done) => {
 afterAll(async (done) => {
   done();
 });
+

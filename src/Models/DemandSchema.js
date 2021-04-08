@@ -16,16 +16,26 @@ const DemandSchema = new mongoose.Schema({
   },
   process: {
     type: String,
-    require: true,
+    require: false,
   },
   categoryID: {
     type: String,
     require: true,
   },
-  sectorID: {
-    type: String,
-    require: true,
-  },
+  sectorHistory: [{
+    sectorID: {
+      type: String,
+      require: true,
+    },
+    createdAt: {
+      type: Date,
+      require: true,
+    },
+    updatedAt: {
+      type: Date,
+      require: true,
+    },
+  }],
   clientID: {
     type: String,
     require: true,
@@ -42,6 +52,29 @@ const DemandSchema = new mongoose.Schema({
     type: Date,
     require: true,
   },
+  updateList: [{
+    userName: {
+      type: String,
+      require: true,
+    },
+    description: {
+      type: String,
+      require: true,
+    },
+    visibilityRestriction: {
+      type: Boolean,
+      require: true,
+      default: false,
+    },
+    createdAt: {
+      type: Date,
+      require: true,
+    },
+    updatedAt: {
+      type: Date,
+      require: true,
+    },
+  }],
 });
 
 module.exports = mongoose.model('Demand', DemandSchema);
