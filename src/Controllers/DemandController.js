@@ -214,5 +214,6 @@ const createDemandUpdate = async (req, res) => {
 };
 
 module.exports = {
-  demandGet, demandCreate, demandUpdate, toggleDemand, demandId,
+  demandGet, demandCreate, demandUpdate, toggleDemand, 
+  demandId, updateSectorDemand, forwardDemand, createDemandUpdate,
 };
