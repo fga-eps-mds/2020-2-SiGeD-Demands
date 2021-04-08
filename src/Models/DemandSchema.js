@@ -19,7 +19,7 @@ const DemandSchema = new mongoose.Schema({
     require: false,
   },
   categoryID: {
-    type: String,
+    type: [String],
     require: true,
   },
   sectorHistory: [{
