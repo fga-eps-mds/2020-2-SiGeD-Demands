@@ -78,7 +78,7 @@ const demandUpdate = async (req, res) => {
   return res.json(updateStatus);
 };
 
-const demandClose = async (req, res) => {
+const toggleDemand = async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -86,7 +86,7 @@ const demandClose = async (req, res) => {
 
     let { open } = demandFound;
 
-    open = false;
+    open = !demandFound.open;
 
     const updateStatus = await Demand.findOneAndUpdate({ _id: id }, {
       open,
@@ -214,12 +214,5 @@ const createDemandUpdate = async (req, res) => {
 };
 
 module.exports = {
-  demandGet,
-  demandCreate,
-  demandUpdate,
-  demandClose,
-  demandId,
-  updateSectorDemand,
-  forwardDemand,
-  createDemandUpdate,
+  demandGet, demandCreate, demandUpdate, toggleDemand, demandId,
 };
