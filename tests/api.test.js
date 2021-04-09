@@ -22,7 +22,6 @@ describe('Sample Test', () => {
     sectorID: '6064ffa9942d5e008c0734dc',
     clientID: '6054dacb934bd000d7ca623b',
     userID: '60578028cb9349004580fb8d',
-    open: false
   };
   const updatedSectorID = {
     sectorID: 'TESTE'
@@ -123,6 +122,18 @@ describe('Sample Test', () => {
     expect(res.body.err).toBe("Invalid ID");
     done();
   });
+  it('Close demand', async (done) => {
+    const res = await request(app).put(`/demand/toggle/${falseId}`).set('x-access-token', token)
+    expect(res.statusCode).toBe(200);
+    expect(res.body.categoryID).toBe(falseDemand.categoryID);
+    expect(res.body.name).toBe(falseDemand.name);
+    expect(res.body.clientID).toBe(falseDemand.clientID);
+    expect(res.body.process).toBe(falseDemand.process);
+    expect(res.body.sectorHistory[0].sectorID).toBe(falseDemand.sectorID);
+    expect(res.body.userID).toBe(falseDemand.userID);
+    expect(res.body.description).toBe(falseDemand.description);
+    done();
+  });
   it('Get false demand', async (done) => {
     const res = await request(app).get('/demand?open=false').set('x-access-token', token);
     expect(res.statusCode).toBe(200);
@@ -134,18 +145,6 @@ describe('Sample Test', () => {
     expect(res.body[0].userID).toBe(falseDemand.userID);
     expect(res.body[0].description).toBe(falseDemand.description);
     expect(res.body[0].open).toBe(false);
-    done();
-  });
-  it('Close demand', async (done) => {
-    const res = await request(app).put(`/demand/toggle/${id}`).set('x-access-token', token)
-    expect(res.statusCode).toBe(200);
-    expect(res.body.categoryID).toBe(demand.categoryID);
-    expect(res.body.name).toBe(demand.name);
-    expect(res.body.clientID).toBe(demand.clientID);
-    expect(res.body.process).toBe(demand.process);
-    expect(res.body.sectorHistory[0].sectorID).toBe(demand.sectorID);
-    expect(res.body.userID).toBe(demand.userID);
-    expect(res.body.description).toBe(demand.description);
     done();
   });
   it('Close demand error', async (done) => {
