@@ -103,6 +103,13 @@ describe('Sample Test', () => {
   it('Get demand', async (done) => {
     const res = await request(app).get('/demand/').set('x-access-token', token);
     expect(res.statusCode).toBe(200);
+    expect(res.body[0].categoryID).toBe(demand.categoryID);
+    expect(res.body[0].name).toBe(demand.name);
+    expect(res.body[0].clientID).toBe(demand.clientID);
+    expect(res.body[0].process).toBe(demand.process);
+    expect(res.body[0].sectorID).toBe(demand.sectorID);
+    expect(res.body[0].userID).toBe(demand.userID);
+    expect(res.body[0].description).toBe(demand.description);
     done();
   });
 
@@ -139,9 +146,16 @@ it('Close demand', async (done) => {
     done();
   });
 
-  it('Get false demand', async (done) => {
+  it('Get closed demands', async (done) => {
     const res = await request(app).get('/demand?open=false').set('x-access-token', token);
     expect(res.statusCode).toBe(200);
+    expect(res.body[0].categoryID).toBe(falseDemand.categoryID);
+    expect(res.body[0].name).toBe(falseDemand.name);
+    expect(res.body[0].clientID).toBe(falseDemand.clientID);
+    expect(res.body[0].process).toBe(falseDemand.process);
+    expect(res.body[0].sectorID).toBe(falseDemand.sectorID);
+    expect(res.body[0].userID).toBe(falseDemand.userID);
+    expect(res.body[0].description).toBe(falseDemand.description);
     expect(res.body[0].open).toBe(false);
     done();
   });
