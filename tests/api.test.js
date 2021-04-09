@@ -55,8 +55,13 @@ describe('Sample Test', () => {
     expect(res.body.name).toBe(demand.name);
     expect(res.body.description).toBe(demand.description);
     expect(res.body.process).toBe(demand.process);
+<<<<<<< HEAD
     expect(res.body.categoryID).toBe(demand.categoryID);
     expect(res.body.sectorHistory[0].sectorID).toBe(demand.sectorID);
+=======
+    expect(res.body.categoryID).toEqual(demand.categoryID);
+    expect(res.body.sectorID).toBe(demand.sectorID);
+>>>>>>> [151] compare categoryId using toEqual.
     expect(res.body.clientID).toBe(demand.clientID);
     expect(res.body.userID).toBe(demand.userID);
     id = res.body._id;
@@ -115,8 +120,13 @@ describe('Sample Test', () => {
     expect(res.body.name).toBe(demand.name);
     expect(res.body.description).toBe(demand.description);
     expect(res.body.process).toBe(demand.process);
+<<<<<<< HEAD
     expect(res.body.categoryID).toBe(demand.categoryID);
     expect(res.body.sectorHistory[0].sectorID).toBe(demand.sectorID);
+=======
+    expect(res.body.categoryID).toEqual(demand.categoryID);
+    expect(res.body.sectorID).toBe(demand.sectorID);
+>>>>>>> [151] compare categoryId using toEqual.
     expect(res.body.clientID).toBe(demand.clientID);
     expect(res.body.userID).toBe(demand.userID);
     done();
@@ -130,6 +140,7 @@ describe('Sample Test', () => {
   it('Close demand', async (done) => {
     const res = await request(app).put(`/demand/toggle/${falseId}`).set('x-access-token', token)
     expect(res.statusCode).toBe(200);
+<<<<<<< HEAD
     expect(res.body.categoryID).toBe(falseDemand.categoryID);
     expect(res.body.name).toBe(falseDemand.name);
     expect(res.body.clientID).toBe(falseDemand.clientID);
@@ -150,6 +161,15 @@ describe('Sample Test', () => {
     expect(res.body[0].userID).toBe(falseDemand.userID);
     expect(res.body[0].description).toBe(falseDemand.description);
     expect(res.body[0].open).toBe(false);
+=======
+    expect(res.body.categoryID).toEqual(demand.categoryID);
+    expect(res.body.name).toBe(demand.name);
+    expect(res.body.clientID).toBe(demand.clientID);
+    expect(res.body.process).toBe(demand.process);
+    expect(res.body.sectorID).toBe(demand.sectorID);
+    expect(res.body.userID).toBe(demand.userID);
+    expect(res.body.description).toBe(demand.description);
+>>>>>>> [151] compare categoryId using toEqual.
     done();
   });
   it('Close demand error', async (done) => {
@@ -277,7 +297,7 @@ it('Create Demand Update visibilityRestriction error', async (done) => {
     expect(res.body.description).toBe(demandUpdate.description);
     expect(res.body.userID).toBe(demandUpdate.userID);
     expect(res.body.sectorID).toBe(demandUpdate.sectorID);
-    expect(res.body.categoryID).toBe(demandUpdate.categoryID);
+    expect(res.body.categoryID).toEqual(demandUpdate.categoryID);
     expect(res.body.clientID).toBe(demandUpdate.clientID);
   });
 
