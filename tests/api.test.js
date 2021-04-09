@@ -8,8 +8,13 @@ describe('Sample Test', () => {
   const demand = {
     name: 'Nome da Demanda',
     description: 'Descrição da Demanda',
+<<<<<<< HEAD
     process: '4001',
     categoryID: '6064ffa9942d5e008c07e61a',
+=======
+    process: '000000',
+    categoryID: ['6064ffa9942d5e008c07e61a', '6064ffa9942d5e008c07e63b'],
+>>>>>>> [151] pass a array of categories.
     sectorID: '6064ffa9942d5e008c0734dc',
     clientID: '6054dacb934bd000d7ca623b',
     userID: '60578028cb9349004580fb8d'
@@ -33,7 +38,7 @@ describe('Sample Test', () => {
     name: "Teste",
     description: "Teste",
     process: '000000',
-    categoryID: '000000',
+    categoryID: ['000000'],
     sectorID: '000000',
     clientID: '000000',
     userID: '000000'
