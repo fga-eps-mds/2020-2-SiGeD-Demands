@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 
 describe('Sample Test', () => {
   let id;
+<<<<<<< HEAD
   let falseId;
   const demand = {
     name: 'Nome da Demanda',
@@ -29,6 +30,9 @@ describe('Sample Test', () => {
   const forwardSectorID = {
     sectorID: 'TESTE 2'
   };
+=======
+
+>>>>>>> [151] fix tests.
   const token = jwt.sign({
     name: "Teste",
     description: "Teste",
@@ -44,6 +48,164 @@ describe('Sample Test', () => {
     expect(app).toBeDefined();
     done();
   });
+<<<<<<< HEAD
+=======
+
+  const category = {
+    name: 'Nome da Categoria',
+    description: 'Descrição da Demanda',
+    color: '#000000'
+  };
+
+  it('Post category', async (done) => {
+    const res = await request(app).post('/category/create').set('x-access-token', token).send(category);
+    expect(res.statusCode).toBe(200);
+    expect(res.body.name).toBe(category.name);
+    expect(res.body.description).toBe(category.description);
+    expect(res.body.color).toBe(category.color);
+    category_id = res.body._id;
+    done();
+  });
+
+  it('Post category error', async (done) => {
+    const errorCategory = {
+      name: '',
+      description: '',
+      color: ''
+    };
+
+    const res = await request(app).post('/category/create').set('x-access-token', token).send(errorCategory);
+    expect(res.statusCode).toBe(400);
+    expect(res.body.status).toEqual(['invalid name', 'invalid description', 'invalid color']);
+    done();
+  });
+
+  it('Get category', async (done) => {
+    const res = await request(app).get('/category/').set('x-access-token', token);
+    expect(res.statusCode).toBe(200);
+    done();
+  });
+
+  it('Get id category', async (done) => {
+    const res = await request(app).get(`/category/${category_id}`).set('x-access-token', token);
+    expect(res.statusCode).toBe(200);
+    expect(res.body.name).toBe(category.name);
+    expect(res.body.description).toBe(category.description);
+    expect(res.body.color).toBe(category.color);
+    done();
+  });
+
+  it('Get id category error', async (done) => {
+    const res = await request(app).get('/category/12345678912345678912345').set('x-access-token', token);
+    expect(res.statusCode).toBe(400);
+    expect(res.body.err).toBe("Invalid ID");
+    done();
+  });
+
+  it('Update category', async () => {
+    const category = {
+      name: "porte de arma",
+      description: "avaliação psicológica",
+      color: "#000000"
+    };
+
+    const res = await request(app)
+      .put(`/category/update/${category_id}`)
+      .set('x-access-token', token)
+      .send(category);
+    expect(res.statusCode).toBe(200);
+    expect(res.body.name).toBe(category.name);
+    expect(res.body.description).toBe(category.description);
+    expect(res.body.color).toBe(category.color);
+  });
+
+  it('Update category error', async () => {
+    const category = {
+      name: "",
+      description: "Jest description",
+      color: "#000000"
+    }
+
+    const res = await request(app)
+      .put(`/category/update/${category_id}`)
+      .set('x-access-token', token)
+      .send(category);
+    expect(res.statusCode).toBe(400);
+    expect(res.body.status).toEqual(['invalid name']);
+  });
+
+  it('Update with invalid id', async () => {
+    const category = {
+      name: "porte de arma",
+      description: "avaliação psicológica",
+      color: "#000000"
+    };
+
+    const res = await request(app)
+      .put(`/category/update/123abc`)
+      .set('x-access-token', token)
+      .send(category)
+    expect(res.statusCode).toBe(400);
+    expect(res.body.err).toBe('invalid id')
+  });
+
+  it('Update category without token', async () => {
+    const category = {
+      name: "Jest test",
+      description: "Jest description",
+      color: "#000000"
+    }
+
+    const res = await request(app)
+      .put(`/category/update/${category_id}`)
+      .send(category);
+    expect(res.statusCode).toBe(401);
+    expect(res.body).toEqual({ auth: false, errorCode: 401, message: 'No token was provided' });
+  });
+
+  it('Update category with invalid token', async () => {
+    const tokenFalho = 'abc123';
+    const category = {
+      name: "Jest test",
+      description: "Jest description",
+      color: "#000000"
+    }
+
+    const res = await request(app)
+      .put(`/category/update/${category_id}`)
+      .set('x-access-token', tokenFalho)
+      .send(category);
+    expect(res.statusCode).toBe(401);
+    expect(res.body).toEqual({ auth: false, message: 'It was not possible to authenticate the token.' });
+  });
+
+  it('Delete category', async (done) => {
+    const res = await request(app).delete(`/category/delete/${category_id}`).set('x-access-token', token)
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual({ "message": "success" });
+    done();
+  });
+
+  it('Delete category error', async (done) => {
+    const res = await request(app).delete('/category/delete/09876543210987654321').set('x-access-token', token)
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toEqual({ "message": "failure" });
+    done();
+  });
+
+  //Demandas
+
+    const demand = {
+    name: 'Nome da Demanda',
+    description: 'Descrição da Demanda',
+    process: '000000',
+    categoryID: ['6064ffa9942d5e008c07e61a', '6064ffa9942d5e008c07e63b'],
+    sectorID: '6064ffa9942d5e008c0734dc',
+    clientID: '6054dacb934bd000d7ca623b',
+    userID: '60578028cb9349004580fb8d'
+  };
+
+>>>>>>> [151] fix tests.
   it('Post demand', async (done) => {
     const res = await request(app).post('/demand/create').set('x-access-token', token).send(demand);
     expect(res.statusCode).toBe(200);
@@ -110,8 +272,12 @@ describe('Sample Test', () => {
     expect(res.body.name).toBe(demand.name);
     expect(res.body.description).toBe(demand.description);
     expect(res.body.process).toBe(demand.process);
+<<<<<<< HEAD
     expect(res.body.categoryID).toBe(demand.categoryID);
     expect(res.body.sectorHistory[0].sectorID).toBe(demand.sectorID);
+=======
+    expect(res.body.sectorID).toBe(demand.sectorID);
+>>>>>>> [151] fix tests.
     expect(res.body.clientID).toBe(demand.clientID);
     expect(res.body.userID).toBe(demand.userID);
     done();
@@ -256,7 +422,7 @@ it('Create Demand Update visibilityRestriction error', async (done) => {
       name: 'Retirada de Documento',
       description: 'Retirar documento na DPSS',
       process: '405',
-      categoryID: '6064ffa9942d5e008c07e61a',
+      categoryID: ['6064ffa9942d5e008c07e61a'],
       sectorID: 'sectorID',
       clientID: 'clientID',
       userID: 'userID'
@@ -443,7 +609,7 @@ it('Create Demand Update visibilityRestriction error', async (done) => {
       .put(`/demand/update/${id}`)
       .send(demand);
     expect(res.statusCode).toBe(401);
-    expect(res.body).toEqual({ auth: false, message: 'No token was provided' });
+    expect(res.body).toEqual({ auth: false, errorCode: 401, message: 'No token was provided' });
   });
 
   it('Update demand with invalid token', async () => {
@@ -462,6 +628,7 @@ it('Create Demand Update visibilityRestriction error', async (done) => {
       .put(`/demand/update/${id}`)
       .set('x-access-token', tokenFalho)
       .send(demand);
+<<<<<<< HEAD
     expect(res.statusCode).toBe(500);
     expect(res.body).toEqual({ auth: false, message: 'It was not possible to authenticate the token.' });
   });
@@ -594,6 +761,15 @@ it('Create Demand Update visibilityRestriction error', async (done) => {
     expect(res.body).toEqual({ "message": "failure" });
     done();
   });
+=======
+    expect(res.statusCode).toBe(401);
+    expect(res.body).toEqual({ auth: false, message: 'It was not possible to authenticate the token.' });
+  });
+
+  // CAtgorias teste
+
+  
+>>>>>>> [151] fix tests.
 });
 afterAll(async (done) => {
   done();
