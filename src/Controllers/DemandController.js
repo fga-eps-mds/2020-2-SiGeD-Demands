@@ -3,7 +3,12 @@ const Demand = require('../Models/DemandSchema');
 const validation = require('../utils/validate');
 
 const demandGet = async (req, res) => {
-  const demands = await Demand.find();
+  const { open } = req.query;
+  if (open === 'false') {
+    const demands = await Demand.find({ open });
+    return res.json(demands);
+  }
+  const demands = await Demand.find({ open: true });
 
   return res.json(demands);
 };
@@ -73,7 +78,7 @@ const demandUpdate = async (req, res) => {
   return res.json(updateStatus);
 };
 
-const demandClose = async (req, res) => {
+const toggleDemand = async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -81,7 +86,7 @@ const demandClose = async (req, res) => {
 
     let { open } = demandFound;
 
-    open = false;
+    open = !demandFound.open;
 
     const updateStatus = await Demand.findOneAndUpdate({ _id: id }, {
       open,
@@ -212,7 +217,7 @@ module.exports = {
   demandGet,
   demandCreate,
   demandUpdate,
-  demandClose,
+  toggleDemand,
   demandId,
   updateSectorDemand,
   forwardDemand,
