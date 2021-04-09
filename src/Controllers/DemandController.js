@@ -3,17 +3,12 @@ const Demand = require('../Models/DemandSchema');
 const validation = require('../utils/validate');
 
 const demandGet = async (req, res) => {
-<<<<<<< HEAD
   const { open } = req.query;
   if (open === 'false') {
     const demands = await Demand.find({ open }).populate('categoryID');
     return res.json(demands);
   }
   const demands = await Demand.find({ open: true }).populate('categoryID');
-=======
-  const query = { _id: id };
-  const demands = await Demand.findOne(query).populate('categoryID');
->>>>>>> [151] sonar cloud vunerability fix.
 
   return res.json(demands);
 };
