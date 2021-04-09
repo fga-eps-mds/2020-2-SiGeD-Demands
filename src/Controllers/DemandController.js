@@ -5,10 +5,10 @@ const validation = require('../utils/validate');
 const demandGet = async (req, res) => {
   const { open } = req.query;
   if (open === 'false') {
-    const demands = await Demand.find({ open });
+    const demands = await Demand.find({ open }).populate('categoryID');
     return res.json(demands);
   }
-  const demands = await Demand.find({ open: true });
+  const demands = await Demand.find({ open: true }).populate('categoryID');
 
   return res.json(demands);
 };
@@ -98,7 +98,7 @@ const demandId = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const demand = await Demand.findOne({ _id: id });
+    const demand = await Demand.findOne({ _id: id }).populate('categoryID');
     return res.status(200).json(demand);
   } catch {
     return res.status(400).json({ err: 'Invalid ID' });
