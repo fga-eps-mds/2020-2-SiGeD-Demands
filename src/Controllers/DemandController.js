@@ -3,12 +3,17 @@ const Demand = require('../Models/DemandSchema');
 const validation = require('../utils/validate');
 
 const demandGet = async (req, res) => {
+<<<<<<< HEAD
   const { open } = req.query;
   if (open === 'false') {
     const demands = await Demand.find({ open }).populate('categoryID');
     return res.json(demands);
   }
   const demands = await Demand.find({ open: true }).populate('categoryID');
+=======
+  const query = { _id: id };
+  const demands = await Demand.findOne(query).populate('categoryID');
+>>>>>>> [151] sonar cloud vunerability fix.
 
   return res.json(demands);
 };
@@ -96,9 +101,10 @@ const toggleDemand = async (req, res) => {
 
 const demandId = async (req, res) => {
   const { id } = req.params;
+  const query = { _id: id };
 
   try {
-    const demand = await Demand.findOne({ _id: id }).populate('categoryID');
+    const demand = await Demand.findOne(query).populate('categoryID');
     return res.status(200).json(demand);
   } catch {
     return res.status(400).json({ err: 'Invalid ID' });
