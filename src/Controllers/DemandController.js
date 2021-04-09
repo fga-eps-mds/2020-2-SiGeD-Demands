@@ -18,7 +18,7 @@ const demandCreate = async (req, res) => {
     name, description, process, categoryID, sectorID, clientID, userID, open,
   } = req.body;
   const validFields = validation.validateDemand(
-    name, description, categoryID, sectorID, clientID, userID,
+    name, description, categoryID, sectorID, clientID, userID, open,
   );
   if (validFields.length) {
     return res.status(400).json({ status: validFields });

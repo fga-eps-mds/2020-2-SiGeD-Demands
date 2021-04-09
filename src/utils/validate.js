@@ -26,7 +26,7 @@ const validateCategory = (name, description, color) => {
 };
 
 const validateDemand = (
-  name, description, categoryID, sectorID, clientID, userID,
+  name, description, categoryID, sectorID, clientID, userID, open,
 ) => {
   const errors = [];
 
@@ -42,6 +42,9 @@ const validateDemand = (
     errors.push('invalid client id');
   } if (!userID) {
     errors.push('invalid user id');
+  }
+  if (typeof (open) !== 'boolean') {
+    errors.push('invalid open type');
   }
 
   return errors;
