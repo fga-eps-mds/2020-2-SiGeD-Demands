@@ -134,7 +134,7 @@ describe('Sample Test', () => {
     expect(res.body.description).toBe(falseDemand.description);
     done();
   });
-  it('Get false demand', async (done) => {
+  it('Get closed demand', async (done) => {
     const res = await request(app).get('/demand?open=false').set('x-access-token', token);
     expect(res.statusCode).toBe(200);
     expect(res.body[0].categoryID).toBe(falseDemand.categoryID);
