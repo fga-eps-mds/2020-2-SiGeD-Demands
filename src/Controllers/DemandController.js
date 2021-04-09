@@ -15,7 +15,7 @@ const demandGet = async (req, res) => {
 
 const demandCreate = async (req, res) => {
   const {
-    name, description, process, categoryID, sectorID, clientID, userID,
+    name, description, process, categoryID, sectorID, clientID, userID, open,
   } = req.body;
   const validFields = validation.validateDemand(
     name, description, categoryID, sectorID, clientID, userID,
@@ -25,6 +25,7 @@ const demandCreate = async (req, res) => {
   }
 
   const newDemand = await Demand.create({
+    open,
     name,
     description,
     process: process || '',

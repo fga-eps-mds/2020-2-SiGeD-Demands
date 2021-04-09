@@ -8,6 +8,7 @@ describe('Sample Test', () => {
   const demand = {
     name: 'Nome da Demanda',
     description: 'Descrição da Demanda',
+    process: '4001',
     categoryID: '6064ffa9942d5e008c07e61a',
     sectorID: '6064ffa9942d5e008c0734dc',
     clientID: '6054dacb934bd000d7ca623b',
@@ -49,7 +50,7 @@ describe('Sample Test', () => {
     expect(res.statusCode).toBe(200);
     expect(res.body.name).toBe(demand.name);
     expect(res.body.description).toBe(demand.description);
-    expect(res.body.process).toBe('');
+    expect(res.body.process).toBe(demand.process);
     expect(res.body.categoryID).toBe(demand.categoryID);
     expect(res.body.sectorHistory[0].sectorID).toBe(demand.sectorID);
     expect(res.body.clientID).toBe(demand.clientID);
@@ -57,7 +58,7 @@ describe('Sample Test', () => {
     id = res.body._id;
     done();
   });
-  it('Post false demand', async (done) => {
+  it('Post closed demand', async (done) => {
     const res = await request(app).post('/demand/create').set('x-access-token', token).send(falseDemand);
     expect(res.statusCode).toBe(200);
     expect(res.body.name).toBe(falseDemand.name);
@@ -98,7 +99,7 @@ describe('Sample Test', () => {
     expect(res.body[0].name).toBe(demand.name);
     expect(res.body[0].clientID).toBe(demand.clientID);
     expect(res.body[0].process).toBe(demand.process);
-    expect(res.body[0].sectorID).toBe(demand.sectorID);
+    expect(res.body[0].sectorHistory[0].sectorID).toBe(demand.sectorID);
     expect(res.body[0].userID).toBe(demand.userID);
     expect(res.body[0].description).toBe(demand.description);
     expect(res.statusCode).toBe(200);
@@ -109,7 +110,7 @@ describe('Sample Test', () => {
     expect(res.statusCode).toBe(200);
     expect(res.body.name).toBe(demand.name);
     expect(res.body.description).toBe(demand.description);
-    expect(res.body.process).toBe('');
+    expect(res.body.process).toBe(demand.process);
     expect(res.body.categoryID).toBe(demand.categoryID);
     expect(res.body.sectorHistory[0].sectorID).toBe(demand.sectorID);
     expect(res.body.clientID).toBe(demand.clientID);
@@ -129,7 +130,7 @@ describe('Sample Test', () => {
     expect(res.body[0].name).toBe(falseDemand.name);
     expect(res.body[0].clientID).toBe(falseDemand.clientID);
     expect(res.body[0].process).toBe(falseDemand.process);
-    expect(res.body[0].sectorID).toBe(falseDemand.sectorID);
+    expect(res.body[0].sectorHistory[0].sectorID).toBe(falseDemand.sectorID);
     expect(res.body[0].userID).toBe(falseDemand.userID);
     expect(res.body[0].description).toBe(falseDemand.description);
     expect(res.body[0].open).toBe(false);
@@ -141,7 +142,7 @@ describe('Sample Test', () => {
     expect(res.body.categoryID).toBe(demand.categoryID);
     expect(res.body.name).toBe(demand.name);
     expect(res.body.clientID).toBe(demand.clientID);
-    expect(res.body.process).toBe('');
+    expect(res.body.process).toBe(demand.process);
     expect(res.body.sectorHistory[0].sectorID).toBe(demand.sectorID);
     expect(res.body.userID).toBe(demand.userID);
     expect(res.body.description).toBe(demand.description);
@@ -159,7 +160,7 @@ it('Update Demand Sector', async (done) => {
   expect(res.body.categoryID).toBe(demand.categoryID);
   expect(res.body.name).toBe(demand.name);
   expect(res.body.clientID).toBe(demand.clientID);
-  expect(res.body.process).toBe('');
+  expect(res.body.process).toBe(demand.process);
   expect(res.body.sectorHistory[0].sectorID).toBe(updatedSectorID.sectorID);
   expect(res.body.userID).toBe(demand.userID);
   expect(res.body.description).toBe(demand.description);
@@ -180,7 +181,7 @@ it('Forward Demand', async (done) => {
   expect(res.body.categoryID).toBe(demand.categoryID);
   expect(res.body.name).toBe(demand.name);
   expect(res.body.clientID).toBe(demand.clientID);
-  expect(res.body.process).toBe('');
+  expect(res.body.process).toBe(demand.process);
   expect(res.body.sectorHistory[0].sectorID).toBe(updatedSectorID.sectorID);
   expect(res.body.sectorHistory[1].sectorID).toBe(forwardSectorID.sectorID);
   expect(res.body.userID).toBe(demand.userID);
@@ -207,7 +208,7 @@ it('Create Demand Update', async (done) => {
   expect(res.body.categoryID).toBe(demand.categoryID);
   expect(res.body.name).toBe(demand.name);
   expect(res.body.clientID).toBe(demand.clientID);
-  expect(res.body.process).toBe('');
+  expect(res.body.process).toBe(demand.process);
   expect(res.body.sectorHistory[0].sectorID).toBe(updatedSectorID.sectorID);
   expect(res.body.sectorHistory[1].sectorID).toBe(forwardSectorID.sectorID);
   expect(res.body.userID).toBe(demand.userID);
