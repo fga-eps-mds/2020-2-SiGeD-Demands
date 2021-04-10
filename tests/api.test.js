@@ -531,12 +531,12 @@ describe('Sample Test', () => {
   it('Update Demand Sector', async (done) => {
     const res = await request(app).put(`/demand/sectorupdate/${id}`).set('x-access-token', token).send(updatedSectorID);
     expect(res.statusCode).toBe(200);
-    expect(res.body.name).toBe(demand.name);
-    expect(res.body.clientID).toBe(demand.clientID);
-    expect(res.body.process).toBe(demand.process);
+    expect(res.body.name).toBe('Retirada de Documento');
+    expect(res.body.clientID).toBe('clientID');
+    expect(res.body.process).toBe('4005');
     expect(res.body.sectorHistory[0].sectorID).toBe(updatedSectorID.sectorID);
-    expect(res.body.userID).toBe(demand.userID);
-    expect(res.body.description).toBe(demand.description);
+    expect(res.body.userID).toBe('userID');
+    expect(res.body.description).toBe('Retirar documento na DPSS');
     done();
   });
   it('Update Demand Sector error', async (done) => {
@@ -551,13 +551,13 @@ describe('Sample Test', () => {
   it('Forward Demand', async (done) => {
     const res = await request(app).put(`/demand/forward/${id}`).set('x-access-token', token).send(forwardSectorID);
     expect(res.statusCode).toBe(200);
-    expect(res.body.name).toBe(demand.name);
-    expect(res.body.clientID).toBe(demand.clientID);
-    expect(res.body.process).toBe(demand.process);
+    expect(res.body.name).toBe('Retirada de Documento');
+    expect(res.body.clientID).toBe('clientID');
+    expect(res.body.process).toBe('4005');
     expect(res.body.sectorHistory[0].sectorID).toBe(updatedSectorID.sectorID);
     expect(res.body.sectorHistory[1].sectorID).toBe(forwardSectorID.sectorID);
-    expect(res.body.userID).toBe(demand.userID);
-    expect(res.body.description).toBe(demand.description);
+    expect(res.body.userID).toBe('userID');
+    expect(res.body.description).toBe('Retirar documento na DPSS');
     done();
   });
   it('Forward Demand error', async (done) => {
@@ -577,13 +577,13 @@ describe('Sample Test', () => {
     };
     const res = await request(app).put(`/demand/create-demand-update/${id}`).set('x-access-token', token).send(demandUpdate);
     expect(res.statusCode).toBe(200);
-    expect(res.body.name).toBe(demand.name);
-    expect(res.body.clientID).toBe(demand.clientID);
-    expect(res.body.process).toBe(demand.process);
+    expect(res.body.name).toBe('Retirada de Documento');
+    expect(res.body.clientID).toBe('clientID');
+    expect(res.body.process).toBe('4005');
     expect(res.body.sectorHistory[0].sectorID).toBe(updatedSectorID.sectorID);
     expect(res.body.sectorHistory[1].sectorID).toBe(forwardSectorID.sectorID);
-    expect(res.body.userID).toBe(demand.userID);
-    expect(res.body.description).toBe(demand.description);
+    expect(res.body.userID).toBe('userID');
+    expect(res.body.description).toBe('Retirar documento na DPSS');
     expect(res.body.updateList[0].userName).toBe(demandUpdate.userName);
     expect(res.body.updateList[0].description).toBe(demandUpdate.description);
     expect(res.body.updateList[0].visibilityRestriction).toBe(demandUpdate.visibilityRestriction);
