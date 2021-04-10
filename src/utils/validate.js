@@ -11,6 +11,11 @@ const validateSectorID = (sectorID) => {
   return errors;
 };
 
+const validateProcess = (process) => {
+  const regex = /^[0-9]+$/;
+  return regex.test(process);
+};
+
 const validateCategory = (name, description, color) => {
   const errors = [];
 
@@ -26,7 +31,7 @@ const validateCategory = (name, description, color) => {
 };
 
 const validateDemand = (
-  name, description, categoryID, sectorID, clientID, userID,
+  name, description, process, categoryID, sectorID, clientID, userID,
 ) => {
   const errors = [];
 
@@ -34,7 +39,7 @@ const validateDemand = (
     errors.push('invalid name');
   } if (!description) {
     errors.push('invalid description');
-  } if (!validateProcess(process)) {
+  } if (!validateProcess(process) || !process) {
     errors.push('invalid process');
   } if (categoryID.length === 0) {
     errors.push('invalid category id');
