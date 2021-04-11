@@ -19,7 +19,7 @@ const demandCreate = async (req, res) => {
   } = req.body;
 
   const validFields = validation.validateDemand(
-    name, description, process, categoryID, sectorID, clientID, userID,
+    name, description, categoryID, sectorID, clientID, userID,
   );
   if (validFields.length) {
     return res.status(400).json({ status: validFields });
@@ -51,7 +51,7 @@ const demandUpdate = async (req, res) => {
   } = req.body;
 
   const validFields = validation.validateDemand(
-    name, description, process, categoryID, sectorID, clientID, userID,
+    name, description, categoryID, sectorID, clientID, userID,
   );
 
   if (validFields.length) {

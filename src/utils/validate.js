@@ -31,7 +31,7 @@ const validateCategory = (name, description, color) => {
 };
 
 const validateDemand = (
-  name, description, process, categoryID, sectorID, clientID, userID,
+  name, description, categoryID, sectorID, clientID, userID,
 ) => {
   const errors = [];
 
@@ -39,8 +39,6 @@ const validateDemand = (
     errors.push('invalid name');
   } if (!description) {
     errors.push('invalid description');
-  } if (!validateProcess(process) || !process) {
-    errors.push('invalid process');
   } if (categoryID.length === 0) {
     errors.push('invalid category id');
   } if (!sectorID) {

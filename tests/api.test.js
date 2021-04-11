@@ -5,11 +5,10 @@ const jwt = require('jsonwebtoken');
 describe('Sample Test', () => {
   // Saving categories ids to use when create demands constants
   let category_id;
-  let category_id2;
 
   // Categories test comes first.
 
-  //Categories values:
+  // Categories values:
   const category = {
     name: 'Nome da Categoria',
     description: 'Descrição da Demanda',
@@ -42,7 +41,6 @@ describe('Sample Test', () => {
     done();
   });
 
-  // Post category
   it('Post category', async (done) => {
     const res = await request(app).post('/category/create').set('x-access-token', token).send(category);
     expect(res.statusCode).toBe(200);
@@ -75,7 +73,6 @@ describe('Sample Test', () => {
     done();
   });
 
-  // Get category tests
   it('Get category', async (done) => {
     const res = await request(app).get('/category/').set('x-access-token', token);
     expect(res.statusCode).toBe(200);
@@ -98,7 +95,6 @@ describe('Sample Test', () => {
     done();
   });
 
-  // Update category tests
   it('Update category', async () => {
     const category = {
       name: "porte de arma",
@@ -201,7 +197,6 @@ describe('Sample Test', () => {
     sectorID: 'TESTE 2'
   };
 
-  // Post Demand
   it('Post demand', async (done) => {
     const res = await request(app).post('/demand/create').set('x-access-token', token).send(demand);
     expect(res.statusCode).toBe(200);
@@ -242,7 +237,6 @@ describe('Sample Test', () => {
     expect(res.body.status).toEqual([
       'invalid name',
       'invalid description',
-      'invalid process',
       'invalid category id',
       'invalid sector id',
       'invalid client id',
@@ -251,7 +245,6 @@ describe('Sample Test', () => {
     done();
   });
 
-  // Get demand
   it('Get demand', async (done) => {
     const res = await request(app).get('/demand/').set('x-access-token', token);
     expect(res.body[0].name).toBe(demand.name);
@@ -308,7 +301,6 @@ describe('Sample Test', () => {
     done();
   });
 
-  // Toggle demand open status
   it('toggle demand error', async (done) => {
     const res = await request(app).put('/demand/toggle/123456789').set('x-access-token', token)
     expect(res.statusCode).toBe(400);
@@ -316,7 +308,6 @@ describe('Sample Test', () => {
     done();
   });
 
-  // Update demand
   it('Update demand', async () => {
     const demandUpdate = {
       name: 'Retirada de Documento',
@@ -336,7 +327,7 @@ describe('Sample Test', () => {
     expect(res.body.clientID).toBe(demandUpdate.clientID);
   });
 
-  // Testeting each erro message
+  // Testing each erro message
   it('Update demand error name', async () => {
     const demand1 = {
       name: '',
@@ -373,25 +364,6 @@ describe('Sample Test', () => {
       .send(demand2);
     expect(res.statusCode).toBe(400);
     expect(res.body.status).toEqual(['invalid description']);
-  });
-
-  it('Update demand error process', async () => {
-    const demand3 = {
-      process: '',
-      description: 'Retirar documento na DPSS',
-      categoryID: 'categoryID',
-      userID: 'userID',
-      clientID: 'clientID',
-      sectorID: 'sectorID',
-      name: 'Retirada de documento'
-    }
-
-    const res = await request(app)
-      .put(`/demand/update/${id}`)
-      .set('x-access-token', token)
-      .send(demand3);
-    expect(res.statusCode).toBe(400);
-    expect(res.body.status).toEqual(['invalid process']);
   });
 
   it('Update demand error category', async () => {
@@ -527,7 +499,7 @@ describe('Sample Test', () => {
     expect(res.body).toEqual({ auth: false, message: 'It was not possible to authenticate the token.' });
   });
 
-  // Update demand to forward
+  // Forward
   it('Update Demand Sector', async (done) => {
     const res = await request(app).put(`/demand/sectorupdate/${id}`).set('x-access-token', token).send(updatedSectorID);
     expect(res.statusCode).toBe(200);
@@ -623,7 +595,7 @@ describe('Sample Test', () => {
     done();
   });
 
-  // Delete category tests comes for last
+  // Delete category tests comes for last, that's important
   it('Delete category', async (done) => {
     const res = await request(app).delete(`/category/delete/${category_id}`).set('x-access-token', token)
     expect(res.statusCode).toBe(200);
