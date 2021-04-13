@@ -274,7 +274,7 @@ describe('Sample Test', () => {
     done();
   });
 
-  // Need to close demand before trying to get closed demands, same goes for getting an opened demands
+  // Need to close demand before trying to get closed demands, same goes for getting opened demands
   it('Close/Open demand', async (done) => {
     const res = await request(app).put(`/demand/toggle/${falseId}`).set('x-access-token', token)
     expect(res.statusCode).toBe(200);
