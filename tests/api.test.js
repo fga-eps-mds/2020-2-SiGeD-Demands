@@ -274,7 +274,7 @@ describe('Sample Test', () => {
     done();
   });
 
-  // Need to close demand before trying to get closed demands, same goes for getting a opened demands
+  // Need to close demand before trying to get closed demands, same goes for getting an opened demands
   it('Close/Open demand', async (done) => {
     const res = await request(app).put(`/demand/toggle/${falseId}`).set('x-access-token', token)
     expect(res.statusCode).toBe(200);
@@ -327,7 +327,7 @@ describe('Sample Test', () => {
     expect(res.body.clientID).toBe(demandUpdate.clientID);
   });
 
-  // Testing each erro message
+  // Testing each error message
   it('Update demand error name', async () => {
     const demand1 = {
       name: '',
@@ -499,7 +499,6 @@ describe('Sample Test', () => {
     expect(res.body).toEqual({ auth: false, message: 'It was not possible to authenticate the token.' });
   });
 
-  // Forward
   it('Update Demand Sector', async (done) => {
     const res = await request(app).put(`/demand/sectorupdate/${id}`).set('x-access-token', token).send(updatedSectorID);
     expect(res.statusCode).toBe(200);
