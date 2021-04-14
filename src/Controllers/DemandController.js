@@ -1,6 +1,46 @@
 const moment = require('moment-timezone');
+const axios = require('axios');
 const Demand = require('../Models/DemandSchema');
 const validation = require('../utils/validate');
+
+const getClients = async () => {
+  console.log('teste');
+  try {
+    return await axios.get('http://localhost:3002/clients', { headers: { 'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwNmU0ZDBhODY1MzkwMDAzZjdmYWMwNSIsImlhdCI6MTYxODM3Mjc3MSwiZXhwIjoxNjE4NDcyNzcxfQ.FALksCdiYUExSF0eNeJF1II0NOoOl8MYr5lYGmxpUYY' } });
+  } catch (error) {
+    return error.json(error);
+  }
+};
+
+const demandGetWithClientsNames = async (req, res) => {
+  console.log('open');
+  const open = true;
+  const demandsWithClients = [];
+  let demands = [];
+  console.log(open, 'open');
+
+  if (open === 'false') {
+    demands = await Demand.find({ open }).populate('categoryID');
+  } else {
+    demands = await Demand.find({ open: true }).populate('categoryID');
+    return res.json('Teste');
+  }
+
+  demandsWithClients[0] = Object.assign(clients[0], demands[0]);
+
+  return res.json(demandsWithClients);
+};
+
+const demandGetByClientId = async (req, res) => {
+  const { clientID } = req.params;
+
+  try {
+    const demand = await Demand.find({ clientID }).populate('categoryID');
+    return res.status(200).json(demand);
+  } catch (error) {
+    return res.status(400).json({ err: 'Invalid ID' });
+  }
+};
 
 const demandGet = async (req, res) => {
   const { open } = req.query;
@@ -219,4 +259,6 @@ module.exports = {
   updateSectorDemand,
   forwardDemand,
   createDemandUpdate,
+  demandGetByClientId,
+  demandGetWithClientsNames,
 };
