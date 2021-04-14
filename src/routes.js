@@ -17,6 +17,7 @@ routes.put('/demand/update/:id', verifyJWT, DemandController.demandUpdate);
 routes.put('/demand/sectorupdate/:id', verifyJWT, DemandController.updateSectorDemand);
 routes.put('/demand/forward/:id', verifyJWT, DemandController.forwardDemand);
 routes.put('/demand/create-demand-update/:id', verifyJWT, DemandController.createDemandUpdate);
+routes.put('/demand/update-demand-update/:id', verifyJWT, DemandController.updateDemandUpdate);
 routes.put('/demand/toggle/:id', verifyJWT, DemandController.toggleDemand);
 routes.get('/clientsNames', verifyJWT, DemandController.demandGetWithClientsNames);
 
