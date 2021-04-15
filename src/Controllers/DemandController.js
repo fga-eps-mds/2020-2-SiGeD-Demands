@@ -9,7 +9,7 @@ const demandGetWithClientsNames = async (req, res) => {
   const demandsWithClients = [];
   let demands;
 
-  const clients = await axios.get('http://192.168.0.109:3002/clients', { headers: { 'x-access-token': token } })
+  const clients = await axios.get(`${process.env.CLIENTS_URL}/clients`, { headers: { 'x-access-token': token } })
     .then((response) => (response.data))
     .catch((err) => {
       console.error(err);
@@ -47,17 +47,6 @@ const demandGetWithClientsNames = async (req, res) => {
   });
 
   return res.json(demandsWithClients);
-};
-
-const demandGetByClientId = async (req, res) => {
-  const { clientID } = req.params;
-
-  try {
-    const demand = await Demand.find({ clientID }).populate('categoryID');
-    return res.status(200).json(demand);
-  } catch (error) {
-    return res.status(400).json({ err: 'Invalid ID' });
-  }
 };
 
 const demandGet = async (req, res) => {
@@ -227,7 +216,7 @@ const forwardDemand = async (req, res) => {
       sectorHistory: demandFound.sectorHistory,
     }, { new: true }, (user) => user);
     return res.json(updateStatus);
-  } catch {
+  } catch (error) {
     return res.status(400).json({ err: 'Invalid ID' });
   }
 };
@@ -277,6 +266,5 @@ module.exports = {
   updateSectorDemand,
   forwardDemand,
   createDemandUpdate,
-  demandGetByClientId,
   demandGetWithClientsNames,
 };

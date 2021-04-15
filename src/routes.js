@@ -18,7 +18,6 @@ routes.put('/demand/sectorupdate/:id', verifyJWT, DemandController.updateSectorD
 routes.put('/demand/forward/:id', verifyJWT, DemandController.forwardDemand);
 routes.put('/demand/create-demand-update/:id', verifyJWT, DemandController.createDemandUpdate);
 routes.put('/demand/toggle/:id', verifyJWT, DemandController.toggleDemand);
-routes.get('/demand/byClientId/:clientID', verifyJWT, DemandController.demandGetByClientId);
 routes.get('/clientsNames', verifyJWT, DemandController.demandGetWithClientsNames);
 
 module.exports = routes;

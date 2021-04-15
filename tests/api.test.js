@@ -519,6 +519,12 @@ describe('Sample Test', () => {
     expect(res.body.status).toEqual(['invalid sectorID']);
     done();
   });
+  it('Update Demand Sector ID error', async (done) => {
+    const res = await request(app).put(`/demand/sectorupdate/123`).set('x-access-token', token).send(updatedSectorID);
+    expect(res.statusCode).toBe(400);
+    expect(res.body.err).toEqual('Invalid ID');
+    done();
+  });
   it('Forward Demand', async (done) => {
     const res = await request(app).put(`/demand/forward/${id}`).set('x-access-token', token).send(forwardSectorID);
     expect(res.statusCode).toBe(200);
@@ -538,6 +544,15 @@ describe('Sample Test', () => {
     const res = await request(app).put(`/demand/forward/${id}`).set('x-access-token', token).send(forwardSectorID);
     expect(res.statusCode).toBe(400);
     expect(res.body.status).toEqual(['invalid sectorID']);
+    done();
+  });
+  it('Forward Demand ID error', async (done) => {
+    const forwardSectorWrong = {
+      sectorID: '2343'
+    };
+    const res = await request(app).put(`/demand/forward/123`).set('x-access-token', token).send(forwardSectorWrong);
+    expect(res.statusCode).toBe(400);
+    expect(res.body.err).toEqual('Invalid ID');
     done();
   });
   it('Create Demand Update', async (done) => {
@@ -596,6 +611,17 @@ describe('Sample Test', () => {
     const res = await request(app).put(`/demand/create-demand-update/${id}`).set('x-access-token', token).send(visibilityRestrictionError);
     expect(res.statusCode).toBe(400);
     expect(res.body.status).toEqual(['invalid visibilityRestriction']);
+    done();
+  });
+  it('Create Demand Update ID error', async (done) => {
+    const demandUpdateIDError = {
+      userName: "Usuário X",
+      description: "Descrição Teste",
+      visibilityRestriction: true
+    };
+    const res = await request(app).put(`/demand/create-demand-update/123`).set('x-access-token', token).send(demandUpdateIDError);
+    expect(res.statusCode).toBe(400);
+    expect(res.body.err).toEqual('Invalid ID');
     done();
   });
 
