@@ -79,10 +79,10 @@ const demandUpdate = async (req, res) => {
 };
 
 const toggleDemand = async (req, res) => {
-  const { id } = req.params;
-
+  let { id } = req.params;
+  id = { _id: id};
   try {
-    const demandFound = await Demand.findOne({ _id: id });
+    const demandFound = await Demand.findOne(id);
 
     let { open } = demandFound;
 
