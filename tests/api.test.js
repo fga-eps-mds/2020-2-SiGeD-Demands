@@ -199,10 +199,12 @@ it('Forward Demand error', async (done) => {
 it('Create Demand Update', async (done) => {
   const demandUpdate = {
       userName: "Nome do usuário",
+      userSector: demand.sectorID,
       description: "Descrição da Atualização de Demanda",
       visibilityRestriction: true
   };
   const res = await request(app).put(`/demand/create-demand-update/${id}`).set('x-access-token', token).send(demandUpdate);
+  console.log(res.body);
   expect(res.statusCode).toBe(200);
   expect(res.body.categoryID).toBe(demand.categoryID);
   expect(res.body.name).toBe(demand.name);
@@ -215,6 +217,7 @@ it('Create Demand Update', async (done) => {
   expect(res.body.updateList[0].userName).toBe(demandUpdate.userName);
   expect(res.body.updateList[0].description).toBe(demandUpdate.description);
   expect(res.body.updateList[0].visibilityRestriction).toBe(demandUpdate.visibilityRestriction);
+  expect(res.body.updateList[0].userSector).toBe(demand.sectorID);
   done();
 });
 it('Create Demand Update userName error', async (done) => {

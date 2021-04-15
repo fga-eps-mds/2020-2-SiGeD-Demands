@@ -182,7 +182,7 @@ const createDemandUpdate = async (req, res) => {
   const { id } = req.params;
 
   const {
-    userName, description, visibilityRestriction,
+    userName, userSector, description, visibilityRestriction,
   } = req.body;
 
   const validFields = validation.validateDemandUpdate(
@@ -198,6 +198,7 @@ const createDemandUpdate = async (req, res) => {
 
     demandFound.updateList = demandFound.updateList.push({
       userName,
+      userSector,
       description,
       visibilityRestriction,
       createdAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
