@@ -262,6 +262,7 @@ const createDemandUpdate = async (req, res) => {
     const updateStatus = await Demand.findOneAndUpdate({ _id: id }, {
       updateList: demandFound.updateList,
     }, { new: true }, (user) => user);
+    
     return res.json(updateStatus);
   } catch {
     return res.status(400).json({ err: 'Invalid ID' });
@@ -271,8 +272,8 @@ const createDemandUpdate = async (req, res) => {
 const getDemandUpdate =  async (req, res) => {
   const { id } = req.params;
 
-  const DemandByID = Demand.findOne({ _id: id })
-  const demandUpdateList = DemandByID.updateList.filter()
+  const updateStatus = await Demand.findOne({ _id: id });
+  
 }
 
 const updateDemandUpdate = async (req, res) => {
@@ -290,28 +291,16 @@ if (validFields.length) {
   return res.status(400).json({ status: validFields });
 }
 
-const editedUpdateDemand = {
-    userName,
-    description,
-    visibilityRestriction,
-    updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
-}
-
 try {
   const updateStatus = await Demand.findOne({ _id: id });
 
-  const updateListByID = updateStatus.updateList.filter((update) => update._id == updateListID);
-  console.log(updateListByID);
-
-  const updateStatus = await Demand.findOneAndUpdate({ _id: id });
-  // const final = updateStatusList.findOneAndUpdate({ _id: updateListID }, {
-  //   userName,
-  //   description,
-  //   visibilityRestriction,
-  //   createdAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
-  //   updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
-  // }, { new: true }, (user) => user);
-  return res.json(updateStatusList);
+  const final = await Demand.findOneAndUpdate({ 'updateList._id': updateListID }, {'$set':{
+    'updateList.$.userName': userName,
+    'updateList.$.description': description,
+    'updateList.$.visibilityRestriction': visibilityRestriction,
+    'updateList.$.updatedAt': moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
+  }}, { new: true }, (user) => user);
+  return res.json(final);
 } catch {
   return res.status(400).json({ err: 'Invalid ID' });
 }
