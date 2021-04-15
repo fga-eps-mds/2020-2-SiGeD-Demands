@@ -210,6 +210,26 @@ const createDemandUpdate = async (req, res) => {
   }
 };
 
+const deleteDemandUpdate = async (req, res) => {
+  const { id } = req.params;
+
+  const {
+    updateListID,
+  } = req.body;
+
+  try {
+    const demand = await Demand.findOne({ _id: id });
+    const updateList = demand.updateList.filter((update) => update._id != updateListID);
+
+    const updateStatus = await Demand.findOneAndUpdate({ _id: id }, {
+      updateList: updateList,
+    }, { new: true }, (user) => user);
+    return res.json(updateStatus);
+  } catch (error) {
+    return res.status(400).json({ err: 'failure' });
+  }
+};
+
 module.exports = {
   demandGet,
   demandCreate,
@@ -219,4 +239,5 @@ module.exports = {
   updateSectorDemand,
   forwardDemand,
   createDemandUpdate,
+  deleteDemandUpdate,
 };
