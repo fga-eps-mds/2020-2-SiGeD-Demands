@@ -204,7 +204,6 @@ it('Create Demand Update', async (done) => {
       visibilityRestriction: true
   };
   const res = await request(app).put(`/demand/create-demand-update/${id}`).set('x-access-token', token).send(demandUpdate);
-  console.log(res.body);
   expect(res.statusCode).toBe(200);
   expect(res.body.categoryID).toBe(demand.categoryID);
   expect(res.body.name).toBe(demand.name);

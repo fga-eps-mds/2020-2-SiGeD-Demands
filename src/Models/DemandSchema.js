@@ -59,7 +59,7 @@ const DemandSchema = new mongoose.Schema({
     },
     userSector: {
       type: String,
-      require: true
+      require: true,
     },
     description: {
       type: String,
