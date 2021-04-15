@@ -1,8 +1,8 @@
 version: '3.8'
 
 services:
-  api_category:
-    container_name: backend_category
+  api_demands:
+    container_name: backend_demands
     build: .
     ports:
       - 3003:3003
@@ -13,12 +13,12 @@ services:
       - ./:/code
       - node_modules:/code/node_modules
     networks: 
-      - backend_category
+      - backend_demands
     depends_on:
-      - db_category
+      - db_demands
 
-  db_category:
-    container_name: db_category
+  db_demands:
+    container_name: db_demands
     image: mongo:4.4
     restart: always
     environment:
@@ -31,11 +31,11 @@ services:
       - ./db/.dbshell:/home/mongodb/.dbshell
       - mongodb:/data/db
     networks: 
-      - backend_category
+      - backend_demands
 
 volumes: 
   node_modules:
   mongodb:
 
 networks: 
-  backend_category:
+  backend_demands:

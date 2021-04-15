@@ -3,30 +3,48 @@ const axios = require('axios');
 const Demand = require('../Models/DemandSchema');
 const validation = require('../utils/validate');
 
-const getClients = async () => {
-  console.log('teste');
-  try {
-    return await axios.get('http://localhost:3002/clients', { headers: { 'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwNmU0ZDBhODY1MzkwMDAzZjdmYWMwNSIsImlhdCI6MTYxODM3Mjc3MSwiZXhwIjoxNjE4NDcyNzcxfQ.FALksCdiYUExSF0eNeJF1II0NOoOl8MYr5lYGmxpUYY' } });
-  } catch (error) {
-    return error.json(error);
-  }
-};
-
 const demandGetWithClientsNames = async (req, res) => {
-  console.log('open');
-  const open = true;
+  const token = req.headers['x-access-token'];
+  const { open } = req.params;
   const demandsWithClients = [];
-  let demands = [];
-  console.log(open, 'open');
+  let demands;
+
+  const clients = await axios.get('http://192.168.0.109:3002/clients', { headers: { 'x-access-token': token } })
+    .then((response) => (response.data))
+    .catch((err) => {
+      console.error(err);
+    });
 
   if (open === 'false') {
     demands = await Demand.find({ open }).populate('categoryID');
   } else {
     demands = await Demand.find({ open: true }).populate('categoryID');
-    return res.json('Teste');
   }
 
-  demandsWithClients[0] = Object.assign(clients[0], demands[0]);
+  clients.map((client) => {
+    demands.map((demand) => {
+      if (client._id === demand.clientID) {
+        const demandWithClient = {
+          clientName: client.name,
+          name: demand.name,
+          categoryID: demand.categoryID,
+          open: demand.open,
+          description: demand.description,
+          process: demand.process,
+          sectorHistory: demand.sectorHistory,
+          clientID: demand.clientID,
+          userID: demand.userID,
+          createdAt: demand.createdAt,
+          updatedAt: demand.updatedAt,
+          updateList: demand.updateList,
+        };
+        demandsWithClients.push(demandWithClient);
+        return true;
+      }
+      return false;
+    });
+    return false;
+  });
 
   return res.json(demandsWithClients);
 };
