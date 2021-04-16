@@ -1,7 +1,7 @@
 # API de Demandas
 [![License: GPL-3.0](https://img.shields.io/badge/License-GPL3-blue.svg)](https://opensource.org/licenses/gpl-3.0.html)
 
-Essa API faz parte da arquitetura de microsserviços do projeto [`NomeDoProjeto`](https://github.com/fga-eps-mds/2020-2-G4), sua funcionalidade é possibilitar o controle dos dados das demandas. 
+Essa API faz parte da arquitetura de microsserviços do projeto [`SiGeD`](https://github.com/fga-eps-mds/2020-2-G4), sua funcionalidade é possibilitar o controle dos dados das demandas. 
 
 ## Como contribuir?
 
@@ -10,7 +10,7 @@ Caso reste duvidas você também pode entrar em contato conosco criando uma issu
 
 ## Documentação
 
-A documentação do projeto pode ser acessada pelo nosso site em https://fga-eps-mds.github.io/2020-2-G4/ ou você pode acessar pela [NomeDoProjeto Documentação](https://fga-eps-mds.github.io/2020-2-G4/home/)
+A documentação do projeto pode ser acessada pelo nosso site em https://fga-eps-mds.github.io/2020-2-G4/ ou você pode acessar pela [SiGeD Documentação](https://fga-eps-mds.github.io/2020-2-G4/home/)
 
 ## Como rodar?
 
