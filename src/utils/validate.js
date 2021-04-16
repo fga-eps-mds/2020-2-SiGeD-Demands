@@ -48,7 +48,7 @@ const validateDemand = (
 };
 
 const validateDemandUpdate = (
-  userName, description, visibilityRestriction,
+  userName, description, visibilityRestriction, userSector,
 ) => {
   const errors = [];
 
@@ -58,6 +58,8 @@ const validateDemandUpdate = (
     errors.push('invalid description');
   } if (!validateOpen(visibilityRestriction)) {
     errors.push('invalid visibilityRestriction');
+  } if (!userSector) {
+    errors.push('invalid sector');
   }
 
   return errors;

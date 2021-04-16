@@ -239,7 +239,7 @@ const createDemandUpdate = async (req, res) => {
   } = req.body;
 
   const validFields = validation.validateDemandUpdate(
-    userName, description, visibilityRestriction,
+    userName, description, visibilityRestriction, userSector,
   );
 
   if (validFields.length) {

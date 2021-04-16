@@ -573,7 +573,7 @@ describe('Sample Test', () => {
       userName: "Nome do usuário",
       userSector: demand.userID,
       description: "Descrição da Atualização de Demanda",
-      visibilityRestriction: true
+      visibilityRestriction: true,
     };
     const res = await request(app).put(`/demand/create-demand-update/${id}`).set('x-access-token', token).send(demandUpdate);
     expect(res.statusCode).toBe(200);
@@ -595,7 +595,7 @@ describe('Sample Test', () => {
       userName: "",
       userSector: demand.userID,
       description: "Descrição da Atualização de Demanda",
-      visibilityRestriction: true
+      visibilityRestriction: true,
     };
     const res = await request(app).put(`/demand/create-demand-update/${id}`).set('x-access-token', token).send(userNameError);
     expect(res.statusCode).toBe(400);
@@ -607,7 +607,7 @@ describe('Sample Test', () => {
       userName: "Nome do Usuário",
       userSector: demand.userID,
       description: "",
-      visibilityRestriction: true
+      visibilityRestriction: true,
     };
     const res = await request(app).put(`/demand/create-demand-update/${id}`).set('x-access-token', token).send(descriptionError);
     expect(res.statusCode).toBe(400);
@@ -619,18 +619,31 @@ describe('Sample Test', () => {
       userName: "Nome do Usuário",
       userSector: demand.userID,
       description: "Descrição da Atualização de Demanda",
-      visibilityRestriction: ""
+      visibilityRestriction: "",
     };
     const res = await request(app).put(`/demand/create-demand-update/${id}`).set('x-access-token', token).send(visibilityRestrictionError);
     expect(res.statusCode).toBe(400);
     expect(res.body.status).toEqual(['invalid visibilityRestriction']);
     done();
   });
+  it('Create Demand Update sectorID error', async (done) => {
+    const sectorIDError = {
+      userName: "Nome do Usuário",
+      description: "Descrição da Atualização de Demanda",
+      visibilityRestriction: true,
+      userSector: ""
+    };
+    const res = await request(app).put(`/demand/create-demand-update/${id}`).set('x-access-token', token).send(sectorIDError);
+    expect(res.statusCode).toBe(400);
+    expect(res.body.status).toEqual(['invalid sector']);
+    done();
+  });
   it('Create Demand Update ID error', async (done) => {
     const demandUpdateIDError = {
       userName: "Usuário X",
       description: "Descrição Teste",
-      visibilityRestriction: true
+      visibilityRestriction: true,
+      userSector: demand.userID,
     };
     const res = await request(app).put(`/demand/create-demand-update/123`).set('x-access-token', token).send(demandUpdateIDError);
     expect(res.statusCode).toBe(400);
