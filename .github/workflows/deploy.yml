@@ -16,7 +16,7 @@ jobs:
         username: ${{ secrets.USER }}
         key: ${{ secrets.KEY }}
         script: |
-          cd 2020-2-G4-Demands
+          cd 2020-2-SiGeD-Demands
           docker-compose down
           git pull origin development
           docker-compose up --build -d
