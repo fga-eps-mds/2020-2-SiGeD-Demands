@@ -100,7 +100,7 @@ const toggleDemand = async (req, res) => {
 
 const demandId = async (req, res) => {
   const { id } = req.params;
-  const query = { _id: id }
+  const query = { _id: id };
 
   try {
     const demand = await Demand.findOne(query);
