@@ -262,48 +262,39 @@ const createDemandUpdate = async (req, res) => {
     const updateStatus = await Demand.findOneAndUpdate({ _id: id }, {
       updateList: demandFound.updateList,
     }, { new: true }, (user) => user);
-    
+
     return res.json(updateStatus);
   } catch {
     return res.status(400).json({ err: 'Invalid ID' });
   }
 };
 
-const getDemandUpdate =  async (req, res) => {
-  const { id } = req.params;
-
-  const updateStatus = await Demand.findOne({ _id: id });
-  
-}
-
 const updateDemandUpdate = async (req, res) => {
-const { id } = req.params;
+  const {
+    userName, description, visibilityRestriction, updateListID,
+  } = req.body;
 
-const {
-  userName, description, visibilityRestriction, updateListID,
-} = req.body;
+  const validFields = validation.validateDemandUpdate(
+    userName, description, visibilityRestriction,
+  );
 
-const validFields = validation.validateDemandUpdate(
-  userName, description, visibilityRestriction,
-);
+  if (validFields.length) {
+    return res.status(400).json({ status: validFields });
+  }
 
-if (validFields.length) {
-  return res.status(400).json({ status: validFields });
-}
-
-try {
-  const updateStatus = await Demand.findOne({ _id: id });
-
-  const final = await Demand.findOneAndUpdate({ 'updateList._id': updateListID }, {'$set':{
-    'updateList.$.userName': userName,
-    'updateList.$.description': description,
-    'updateList.$.visibilityRestriction': visibilityRestriction,
-    'updateList.$.updatedAt': moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
-  }}, { new: true }, (user) => user);
-  return res.json(final);
-} catch {
-  return res.status(400).json({ err: 'Invalid ID' });
-}
+  try {
+    const final = await Demand.findOneAndUpdate({ 'updateList._id': updateListID }, {
+      $set: {
+        'updateList.$.userName': userName,
+        'updateList.$.description': description,
+        'updateList.$.visibilityRestriction': visibilityRestriction,
+        'updateList.$.updatedAt': moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
+      },
+    }, { new: true }, (user) => user);
+    return res.json(final);
+  } catch {
+    return res.status(400).json({ err: 'Invalid ID' });
+  }
 };
 
 module.exports = {
