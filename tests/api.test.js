@@ -256,6 +256,19 @@ describe('Sample Test', () => {
     expect(res.statusCode).toBe(200);
     done();
   });
+
+  it('Get demand', async (done) => {
+    const res = await request(app).get('/demand/?open=true').set('x-access-token', token);
+    expect(res.body[0].name).toBe(demand.name);
+    expect(res.body[0].process).toBe(demand.process);
+    expect(res.body[0].clientID).toBe(demand.clientID);
+    expect(res.body[0].sectorHistory[0].sectorID).toBe(demand.sectorID);
+    expect(res.body[0].description).toBe(demand.description);
+    expect(res.body[0].userID).toBe(demand.userID);
+    expect(res.statusCode).toBe(200);
+    done();
+  });
+
   it('Get id demand', async (done) => {
     const res = await request(app).get(`/demand/${id}`).set('x-access-token', token);
     expect(res.statusCode).toBe(200);

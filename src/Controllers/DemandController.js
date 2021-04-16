@@ -62,9 +62,11 @@ const demandGet = async (req, res) => {
   if (open === 'false') {
     const demands = await Demand.find({ open }).populate('categoryID');
     return res.json(demands);
+  } if (open === 'true') {
+    const demands = await Demand.find({ open: true }).populate('categoryID');
+    return res.json(demands);
   }
-  const demands = await Demand.find({ open: true }).populate('categoryID');
-
+  const demands = await Demand.find().populate('categoryID');
   return res.json(demands);
 };
 
