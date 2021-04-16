@@ -57,6 +57,10 @@ const DemandSchema = new mongoose.Schema({
       type: String,
       require: true,
     },
+    userSector: {
+      type: String,
+      require: true,
+    },
     description: {
       type: String,
       require: true,

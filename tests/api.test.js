@@ -543,6 +543,7 @@ describe('Sample Test', () => {
   it('Create Demand Update', async (done) => {
     const demandUpdate = {
       userName: "Nome do usuário",
+      userSector: demand.userID,
       description: "Descrição da Atualização de Demanda",
       visibilityRestriction: true
     };
@@ -556,6 +557,7 @@ describe('Sample Test', () => {
     expect(res.body.userID).toBe('userID');
     expect(res.body.description).toBe('Retirar documento na DPSS');
     expect(res.body.updateList[0].userName).toBe(demandUpdate.userName);
+    expect(res.body.updateList[0].userSector).toBe(demandUpdate.userSector);
     expect(res.body.updateList[0].description).toBe(demandUpdate.description);
     expect(res.body.updateList[0].visibilityRestriction).toBe(demandUpdate.visibilityRestriction);
     done();
@@ -563,6 +565,7 @@ describe('Sample Test', () => {
   it('Create Demand Update userName error', async (done) => {
     const userNameError = {
       userName: "",
+      userSector: demand.userID,
       description: "Descrição da Atualização de Demanda",
       visibilityRestriction: true
     };
@@ -574,6 +577,7 @@ describe('Sample Test', () => {
   it('Create Demand Update description error', async (done) => {
     const descriptionError = {
       userName: "Nome do Usuário",
+      userSector: demand.userID,
       description: "",
       visibilityRestriction: true
     };
@@ -585,6 +589,7 @@ describe('Sample Test', () => {
   it('Create Demand Update visibilityRestriction error', async (done) => {
     const visibilityRestrictionError = {
       userName: "Nome do Usuário",
+      userSector: demand.userID,
       description: "Descrição da Atualização de Demanda",
       visibilityRestriction: ""
     };
