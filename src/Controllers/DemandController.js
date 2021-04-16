@@ -5,10 +5,10 @@ const validation = require('../utils/validate');
 const demandGet = async (req, res) => {
   const { open } = req.query;
   if (open === 'false') {
-    const demands = await Demand.find({ open });
+    const demands = await Demand.find({ open }).populate('categoryID');
     return res.json(demands);
   }
-  const demands = await Demand.find({ open: true });
+  const demands = await Demand.find({ open: true }).populate('categoryID');
 
   return res.json(demands);
 };
@@ -17,6 +17,7 @@ const demandCreate = async (req, res) => {
   const {
     name, description, process, categoryID, sectorID, clientID, userID,
   } = req.body;
+
   const validFields = validation.validateDemand(
     name, description, categoryID, sectorID, clientID, userID,
   );
@@ -57,25 +58,21 @@ const demandUpdate = async (req, res) => {
     return res.status(400).json({ status: validFields });
   }
 
-  const updateStatus = await Demand.findOneAndUpdate({ _id: id }, {
-    name,
-    description,
-    process: process || '',
-    categoryID,
-    sectorHistory: {
+  try {
+    const updateStatus = await Demand.findOneAndUpdate({ _id: id }, {
+      name,
+      description,
+      process,
+      categoryID,
       sectorID,
-    },
-    clientID,
-    userID,
-    updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
-  }, { new: true }, (err, user) => {
-    if (err) {
-      return err;
-    }
-    return user;
-  });
-
-  return res.json(updateStatus);
+      clientID,
+      userID,
+      updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
+    }, { new: true }, (user) => user);
+    return res.json(updateStatus);
+  } catch {
+    return res.status(400).json({ err: 'invalid id' });
+  }
 };
 
 const toggleDemand = async (req, res) => {
