@@ -34,7 +34,7 @@ const validateDemand = (
     errors.push('invalid name');
   } if (!description) {
     errors.push('invalid description');
-  } if (!categoryID) {
+  } if (categoryID.length === 0) {
     errors.push('invalid category id');
   } if (!sectorID) {
     errors.push('invalid sector id');
