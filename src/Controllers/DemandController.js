@@ -103,7 +103,7 @@ const demandId = async (req, res) => {
   const query = { _id: id };
 
   try {
-    const demand = await Demand.findOne(query);
+    const demand = await Demand.findOne({ _id: id }).populate('categoryID');
     return res.status(200).json(demand);
   } catch {
     return res.status(400).json({ err: 'Invalid ID' });
