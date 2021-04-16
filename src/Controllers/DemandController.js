@@ -100,8 +100,6 @@ const toggleDemand = async (req, res) => {
 
 const demandId = async (req, res) => {
   const { id } = req.params;
-  const query = { _id: id };
-
   try {
     const demand = await Demand.findOne({ _id: id }).populate('categoryID');
     return res.status(200).json(demand);

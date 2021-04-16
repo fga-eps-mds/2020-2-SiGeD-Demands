@@ -574,18 +574,6 @@ describe('Sample Test', () => {
     expect(res.body.status).toEqual(['invalid userName']);
     done();
   });
-  it('Create Demand Update userID error', async (done) => {
-    const userSectorError = {
-      userName: "Nome do usuario",
-      userSector: "123",
-      description: "Descrição da Atualização de Demanda",
-      visibilityRestriction: true
-    };
-    const res = await request(app).put(`/demand/create-demand-update/${id}`).set('x-access-token', token).send(userSectorError);
-    expect(res.statusCode).toBe(400);
-    expect(res.body.err).toBe("Invalid ID");
-    done();
-  });
   it('Create Demand Update description error', async (done) => {
     const descriptionError = {
       userName: "Nome do Usuário",
