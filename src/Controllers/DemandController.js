@@ -16,7 +16,7 @@ const getClients = async (req, res, token) => {
 const demandGetWithClientsNames = async (req, res) => {
   try {
     const token = req.headers['x-access-token'];
-    const { open } = req.params;
+    const { open } = req.query;
     const demandsWithClients = [];
     let demands;
     const clients = await getClients(req, res, token);
