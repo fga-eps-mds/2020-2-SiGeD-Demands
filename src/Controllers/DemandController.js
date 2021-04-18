@@ -1,15 +1,72 @@
 const moment = require('moment-timezone');
+const axios = require('axios');
 const Demand = require('../Models/DemandSchema');
 const validation = require('../utils/validate');
+
+const getClients = async (req, res, token) => {
+  try {
+    const clients = await axios.get(`http://${process.env.CLIENTS_URL}:3002/clients`, { headers: { 'x-access-token': token } })
+      .then((response) => (response.data));
+    return clients;
+  } catch {
+    return res.status(400).json({ err: 'Could not connect to api_clients' });
+  }
+};
+
+const demandGetWithClientsNames = async (req, res) => {
+  try {
+    const token = req.headers['x-access-token'];
+    const { open } = req.query;
+    const demandsWithClients = [];
+    let demands;
+    const clients = await getClients(req, res, token);
+
+    if (open === 'false') {
+      demands = await Demand.find({ open }).populate('categoryID');
+    } else {
+      demands = await Demand.find({ open: true }).populate('categoryID');
+    }
+
+    clients.map((client) => {
+      demands.map((demand) => {
+        if (client._id === demand.clientID) {
+          const demandWithClient = {
+            clientName: client.name,
+            name: demand.name,
+            categoryID: demand.categoryID,
+            open: demand.open,
+            description: demand.description,
+            process: demand.process,
+            sectorHistory: demand.sectorHistory,
+            clientID: demand.clientID,
+            userID: demand.userID,
+            createdAt: demand.createdAt,
+            updatedAt: demand.updatedAt,
+            updateList: demand.updateList,
+          };
+          demandsWithClients.push(demandWithClient);
+          return true;
+        }
+        return false;
+      });
+      return false;
+    });
+    return res.json(demandsWithClients);
+  } catch {
+    return res.status(400).json({ err: 'Could not connect to api_clients' });
+  }
+};
 
 const demandGet = async (req, res) => {
   const { open } = req.query;
   if (open === 'false') {
     const demands = await Demand.find({ open }).populate('categoryID');
     return res.json(demands);
+  } if (open === 'true') {
+    const demands = await Demand.find({ open: true }).populate('categoryID');
+    return res.json(demands);
   }
-  const demands = await Demand.find({ open: true }).populate('categoryID');
-
+  const demands = await Demand.find().populate('categoryID');
   return res.json(demands);
 };
 
@@ -169,7 +226,7 @@ const forwardDemand = async (req, res) => {
       sectorHistory: demandFound.sectorHistory,
     }, { new: true }, (user) => user);
     return res.json(updateStatus);
-  } catch {
+  } catch (error) {
     return res.status(400).json({ err: 'Invalid ID' });
   }
 };
@@ -182,7 +239,7 @@ const createDemandUpdate = async (req, res) => {
   } = req.body;
 
   const validFields = validation.validateDemandUpdate(
-    userName, description, visibilityRestriction,
+    userName, description, visibilityRestriction, userSector,
   );
 
   if (validFields.length) {
@@ -219,4 +276,5 @@ module.exports = {
   updateSectorDemand,
   forwardDemand,
   createDemandUpdate,
+  demandGetWithClientsNames,
 };
