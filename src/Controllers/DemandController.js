@@ -236,11 +236,11 @@ const createDemandUpdate = async (req, res) => {
   const { id } = req.params;
 
   const {
-    userName, userSector, description, visibilityRestriction,
+    userName, userSector, userID, description, visibilityRestriction, important,
   } = req.body;
 
   const validFields = validation.validateDemandUpdate(
-    userName, description, visibilityRestriction, userSector,
+    userName, description, visibilityRestriction, userSector, userID, important,
   );
 
   if (validFields.length) {
@@ -253,8 +253,10 @@ const createDemandUpdate = async (req, res) => {
     demandFound.updateList = demandFound.updateList.push({
       userName,
       userSector,
+      userID,
       description,
       visibilityRestriction,
+      important,
       createdAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
       updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
     });
@@ -262,9 +264,61 @@ const createDemandUpdate = async (req, res) => {
     const updateStatus = await Demand.findOneAndUpdate({ _id: id }, {
       updateList: demandFound.updateList,
     }, { new: true }, (user) => user);
+
     return res.json(updateStatus);
   } catch {
     return res.status(400).json({ err: 'Invalid ID' });
+  }
+};
+
+const updateDemandUpdate = async (req, res) => {
+  const {
+    userName, userSector, userID, description, visibilityRestriction, updateListID, important,
+  } = req.body;
+
+  const validFields = validation.validateDemandUpdate(
+    userName, description, visibilityRestriction, userSector, userID, important,
+  );
+
+  if (validFields.length) {
+    return res.status(400).json({ status: validFields });
+  }
+
+  try {
+    const final = await Demand.findOneAndUpdate({ 'updateList._id': updateListID }, {
+      $set: {
+        'updateList.$.userName': userName,
+        'updateList.$.userSector': userSector,
+        'updateList.$.userID': userID,
+        'updateList.$.description': description,
+        'updateList.$.visibilityRestriction': visibilityRestriction,
+        'updateList.$.important': important,
+        'updateList.$.updatedAt': moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
+      },
+    }, { new: true }, (user) => user);
+    return res.json(final);
+  } catch {
+    return res.status(400).json({ err: 'Invalid ID' });
+  }
+};
+
+const deleteDemandUpdate = async (req, res) => {
+  const { id } = req.params;
+
+  const {
+    updateListID,
+  } = req.body;
+
+  try {
+    const demand = await Demand.findOne({ _id: id });
+    const updateList = demand.updateList.filter((update) => String(update._id) !== updateListID);
+
+    const updateStatus = await Demand.findOneAndUpdate({ _id: id }, {
+      updateList,
+    }, { new: true }, (user) => user);
+    return res.json(updateStatus);
+  } catch (error) {
+    return res.status(400).json({ err: 'failure' });
   }
 };
 
@@ -278,4 +332,6 @@ module.exports = {
   forwardDemand,
   createDemandUpdate,
   demandGetWithClientsNames,
+  updateDemandUpdate,
+  deleteDemandUpdate,
 };
