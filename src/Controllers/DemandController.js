@@ -236,11 +236,11 @@ const createDemandUpdate = async (req, res) => {
   const { id } = req.params;
 
   const {
-    userName, userSector, description, visibilityRestriction,
+    userName, userSector, userID, description, visibilityRestriction, important,
   } = req.body;
 
   const validFields = validation.validateDemandUpdate(
-    userName, description, visibilityRestriction, userSector,
+    userName, description, visibilityRestriction, userSector, userID, important,
   );
 
   if (validFields.length) {
@@ -253,8 +253,10 @@ const createDemandUpdate = async (req, res) => {
     demandFound.updateList = demandFound.updateList.push({
       userName,
       userSector,
+      userID,
       description,
       visibilityRestriction,
+      important,
       createdAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
       updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
     });
@@ -271,11 +273,11 @@ const createDemandUpdate = async (req, res) => {
 
 const updateDemandUpdate = async (req, res) => {
   const {
-    userName, description, visibilityRestriction, updateListID,
+    userName, userSector, userID, description, visibilityRestriction, updateListID, important,
   } = req.body;
 
   const validFields = validation.validateDemandUpdate(
-    userName, description, visibilityRestriction,
+    userName, description, visibilityRestriction, userSector, userID, important,
   );
 
   if (validFields.length) {
@@ -286,8 +288,11 @@ const updateDemandUpdate = async (req, res) => {
     const final = await Demand.findOneAndUpdate({ 'updateList._id': updateListID }, {
       $set: {
         'updateList.$.userName': userName,
+        'updateList.$.userSector': userSector,
+        'updateList.$.userID': userID,
         'updateList.$.description': description,
         'updateList.$.visibilityRestriction': visibilityRestriction,
+        'updateList.$.important': important,
         'updateList.$.updatedAt': moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
       },
     }, { new: true }, (user) => user);
