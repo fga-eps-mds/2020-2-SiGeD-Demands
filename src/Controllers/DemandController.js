@@ -311,10 +311,10 @@ const deleteDemandUpdate = async (req, res) => {
 
   try {
     const demand = await Demand.findOne({ _id: id });
-    const updateList = demand.updateList.filter((update) => update._id != updateListID);
+    const updateList = demand.updateList.filter((update) => String(update._id) !== updateListID);
 
     const updateStatus = await Demand.findOneAndUpdate({ _id: id }, {
-      updateList: updateList,
+      updateList,
     }, { new: true }, (user) => user);
     return res.json(updateStatus);
   } catch (error) {
