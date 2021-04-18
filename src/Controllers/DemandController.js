@@ -31,6 +31,7 @@ const demandGetWithClientsNames = async (req, res) => {
       demands.map((demand) => {
         if (client._id === demand.clientID) {
           const demandWithClient = {
+            _id: demand._id,
             clientName: client.name,
             name: demand.name,
             categoryID: demand.categoryID,
