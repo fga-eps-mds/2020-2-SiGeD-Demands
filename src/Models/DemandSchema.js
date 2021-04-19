@@ -72,7 +72,7 @@ const DemandSchema = new mongoose.Schema({
     visibilityRestriction: {
       type: Boolean,
       require: true,
-      default: false,
+      default: true,
     },
     important: {
       type: Boolean,
