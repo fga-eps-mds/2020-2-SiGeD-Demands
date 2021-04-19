@@ -287,6 +287,14 @@ describe('Sample Test', () => {
     done();
   });
 
+  it('Get year filtered demands',  async (done) => {
+    const year = 2021;
+    const res = await request(app).get(`/demand/year/${year}`).set('x-access-token', token);
+    const createdAtDate = new Date(res.body[0].createdAt).getFullYear();
+    expect(createdAtDate).toBe(2021);
+    done();
+  });
+
   // Need to close demand before trying to get closed demands, same goes for getting opened demands
   it('Close/Open demand', async (done) => {
     const res = await request(app).put(`/demand/toggle/${falseId}`).set('x-access-token', token)

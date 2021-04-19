@@ -71,6 +71,13 @@ const demandGet = async (req, res) => {
   return res.json(demands);
 };
 
+const demandGetForYear = async (req, res) => {
+  const { year } = req.params;
+  const demands = await Demand.find();
+  const filteredDemands = demands.filter((demand) => demand.createdAt.getFullYear().toString() === year);
+  return res.json(filteredDemands);
+}
+
 const demandCreate = async (req, res) => {
   const {
     name, description, process, categoryID, sectorID, clientID, userID,
@@ -334,4 +341,5 @@ module.exports = {
   demandGetWithClientsNames,
   updateDemandUpdate,
   deleteDemandUpdate,
+  demandGetForYear
 };
