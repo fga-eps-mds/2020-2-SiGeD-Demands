@@ -3,6 +3,11 @@ const validateOpen = (open) => {
   return regex.test(open);
 };
 
+const validateImportant = (important) => {
+  const regex = /^(true|false)$/;
+  return regex.test(important);
+};
+
 const validateSectorID = (sectorID) => {
   const errors = [];
   if (!sectorID) {
@@ -48,7 +53,7 @@ const validateDemand = (
 };
 
 const validateDemandUpdate = (
-  userName, description, visibilityRestriction,
+  userName, description, visibilityRestriction, userSector, userID, important,
 ) => {
   const errors = [];
 
@@ -58,6 +63,12 @@ const validateDemandUpdate = (
     errors.push('invalid description');
   } if (!validateOpen(visibilityRestriction)) {
     errors.push('invalid visibilityRestriction');
+  } if (!userSector) {
+    errors.push('invalid sector');
+  } if (!userID) {
+    errors.push('invalid user');
+  } if (!validateImportant(important)) {
+    errors.push('invalid important');
   }
 
   return errors;
