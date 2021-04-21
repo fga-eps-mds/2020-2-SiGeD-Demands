@@ -21,5 +21,6 @@ routes.get('/clientsNames', verifyJWT, DemandController.demandGetWithClientsName
 routes.put('/demand/create-demand-update/:id', verifyJWT, DemandController.createDemandUpdate);
 routes.put('/demand/update-demand-update/:id', verifyJWT, DemandController.updateDemandUpdate);
 routes.put('/demand/delete-demand-update/:id', verifyJWT, DemandController.deleteDemandUpdate);
+routes.get('/statistic', verifyJWT, DemandController.demandsStatistic);
 
 module.exports = routes;

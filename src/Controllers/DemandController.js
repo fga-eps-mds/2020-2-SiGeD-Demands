@@ -1,6 +1,7 @@
 const moment = require('moment-timezone');
 const axios = require('axios');
 const Demand = require('../Models/DemandSchema');
+const Category = require('../Models/CategorySchema');
 const validation = require('../utils/validate');
 
 const getClients = async (req, res, token) => {
@@ -69,6 +70,33 @@ const demandGet = async (req, res) => {
   }
   const demands = await Demand.find().populate('categoryID');
   return res.json(demands);
+};
+
+const demandsStatistic = async (req, res) => {
+  const aggregatorOpts = [
+    {$match: {open: true}},
+    {$unwind: "$categoryID"},
+    { "$lookup": {
+      "from": Category.collection.name,
+      "localField": "categoryID",
+      "foreignField": "_id",
+      "as": "categories"
+    }},
+    {$group: {
+        _id: "$categoryID",
+        categorires: { $first: "$categories" },
+        count: { $sum: 1 }
+      }
+    },
+  ]
+
+  try{
+    const statistics = await Demand.aggregate(aggregatorOpts).exec();
+    return res.json(statistics);
+  } catch {
+    return res.status(400).json({ err: 'failed to generate statistics' });
+  }
+  
 };
 
 const demandCreate = async (req, res) => {
@@ -334,4 +362,5 @@ module.exports = {
   demandGetWithClientsNames,
   updateDemandUpdate,
   deleteDemandUpdate,
+  demandsStatistic,
 };
