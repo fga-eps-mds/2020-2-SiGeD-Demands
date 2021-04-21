@@ -72,7 +72,7 @@ const demandGet = async (req, res) => {
   return res.json(demands);
 };
 
-const demandsStatistic = async (req, res) => {
+const demandsCategoriesStatistic = async (req, res) => {
   const aggregatorOpts = [
     { $match: { open: true } },
     { $unwind: '$categoryID' },
@@ -97,6 +97,25 @@ const demandsStatistic = async (req, res) => {
     const statistics = await Demand.aggregate(aggregatorOpts).exec();
     return res.json(statistics);
   } catch {
+    return res.status(400).json({ err: 'failed to generate statistics' });
+  }
+};
+
+const demandsSectorsStatistic = async (req, res) => {
+  const aggregatorOpts = [
+    { $match: { open: true } },
+    {
+      $group: {
+        _id: { $last: '$sectorHistory.sectorID' },
+        count: { $sum: 1 },
+      },
+    },
+  ];
+
+  try {
+    const statistics = await Demand.aggregate(aggregatorOpts).exec();
+    return res.json(statistics);
+  } catch (err) {
     return res.status(400).json({ err: 'failed to generate statistics' });
   }
 };
@@ -364,5 +383,6 @@ module.exports = {
   demandGetWithClientsNames,
   updateDemandUpdate,
   deleteDemandUpdate,
-  demandsStatistic,
+  demandsCategoriesStatistic,
+  demandsSectorsStatistic,
 };
