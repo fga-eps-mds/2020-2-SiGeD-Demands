@@ -72,8 +72,14 @@ const demandGet = async (req, res) => {
 };
 
 const demandGetForYear = async (req, res) => {
+  const { open } = req.query;
   const { year } = req.params;
-  const demands = await Demand.find();
+  let demands;
+  if (open === 'false') {
+    demands = await Demand.find({ open }).populate('categoryID');
+  } else {
+    demands = await Demand.find({ open: true }).populate('categoryID');
+  }
   const filteredDemands = demands.filter((demand) => demand.createdAt.getFullYear().toString() === year);
   return res.json(filteredDemands);
 }
@@ -90,6 +96,11 @@ const demandCreate = async (req, res) => {
     return res.status(400).json({ status: validFields });
   }
 
+  var d = new Date();
+  var year = d.getFullYear();
+  var month = d.getMonth();
+  var day = d.getDate();
+
   const newDemand = await Demand.create({
     name,
     description,
@@ -102,7 +113,7 @@ const demandCreate = async (req, res) => {
     },
     clientID,
     userID,
-    createdAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
+    createdAt: new Date(year + 1, month, day),
     updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
   });
 
