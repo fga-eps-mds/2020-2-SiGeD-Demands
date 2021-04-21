@@ -14,6 +14,7 @@ services:
       - node_modules:/code/node_modules
     networks: 
       - backend_demands
+      - siged_backend
     depends_on:
       - db_demands
 
@@ -39,3 +40,5 @@ volumes:
 
 networks: 
   backend_demands:
+  siged_backend:
+    external: true

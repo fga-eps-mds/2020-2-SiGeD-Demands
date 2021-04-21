@@ -14,7 +14,15 @@ A documentação do projeto pode ser acessada pelo nosso site em https://fga-eps
 
 ## Como rodar?
 
-Para rodar a API é preciso usar o seguinte comando usando o docker.
+Para rodar a API é preciso usar os seguintes comandos usando o docker:
+
+Crie uma network para os containers da API, caso não exista:
+
+```bash
+docker network create siged_backend
+```
+
+Suba o container com o comando:
 
 ```bash
 docker-compose up
