@@ -10,5 +10,5 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Tests check
-      run: docker-compose run api_demands bash -c  "yarn && yarn jest --coverage --forceExit"
+      run: docker network create siged_backend && docker-compose run api_demands bash -c  "yarn && yarn jest --coverage --forceExit"
 
