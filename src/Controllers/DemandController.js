@@ -87,8 +87,8 @@ const demandsCategoriesStatistic = async (req, res) => {
     {
       $group: {
         _id: '$categoryID',
-        categorires: { $first: '$categories' },
-        count: { $sum: 1 },
+        categories: { $first: '$categories' },
+        demandas: { $sum: 1 },
       },
     },
   ];
@@ -107,7 +107,7 @@ const demandsSectorsStatistic = async (req, res) => {
     {
       $group: {
         _id: { $last: '$sectorHistory.sectorID' },
-        count: { $sum: 1 },
+        total: { $sum: 1 },
       },
     },
   ];
