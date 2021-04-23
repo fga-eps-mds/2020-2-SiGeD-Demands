@@ -172,6 +172,8 @@ describe('Sample Test', () => {
   // Demands constants
   let id;
   let falseId;
+  const sectorName = null;
+  const categoryName = null;
   const demand = {
     name: 'Nome da Demanda',
     description: 'Descrição da Demanda',
@@ -315,7 +317,7 @@ describe('Sample Test', () => {
   });
 
   it('toggle demand error', async (done) => {
-    const res = await request(app).put('/demand/toggle/123456789').set('x-access-token', token)
+    const res = await request(app).put('/demand/toggle/123456789').set('x-access-token', token);
     expect(res.statusCode).toBe(400);
     expect(res.body.err).toBe("Invalid ID");
     done();
@@ -339,6 +341,28 @@ describe('Sample Test', () => {
     expect(res.body.userID).toBe(demandUpdate.userID);
     expect(res.body.clientID).toBe(demandUpdate.clientID);
   });
+
+  // statisticas tests
+  it('Get category statistics', async (done) => {
+    const res = await request(app).get('/statistic/category?id=null').set('x-access-token', token);
+    expect(res.statusCode).toBe(200);
+    expect(res.body[0].demandas).toBe(1);
+    done();
+  })
+
+  it('Get category statistics filtered by sector', async (done) => {
+    const res = await request(app).get('/statistic/category?id=6064ffa9942d5e008c0734dc').set('x-access-token', token);
+    expect(res.statusCode).toBe(200);
+    expect(res.body[0].demandas).toBe(1);
+    done();
+  })
+
+  it('Get sector statistics', async (done) => {
+    const res = await request(app).get('/statistic/sector?id=null').set('x-access-token', token);
+    expect(res.statusCode).toBe(200);
+    expect(res.body[0].total).toBe(1);
+    done();
+  })
 
   // Testing each error message
   it('Update demand error name', async () => {
@@ -592,6 +616,7 @@ describe('Sample Test', () => {
     expect(res.body.updateList[0].description).toBe(demandUpdate.description);
     expect(res.body.updateList[0].visibilityRestriction).toBe(demandUpdate.visibilityRestriction);
     expect(res.body.updateList[0].important).toBe(demandUpdate.important);
+    const updateid = res.body.updateList[0]._id;
     done();
   });
   it('Create Demand Update userName error', async (done) => {
@@ -692,7 +717,6 @@ describe('Sample Test', () => {
     expect(res.body.status).toEqual(['invalid important']);
     done();
   });
-  
 
   // Delete category tests comes for last, that's important
   it('Delete category', async (done) => {
