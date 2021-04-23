@@ -95,7 +95,7 @@ const demandsCategoriesStatistic = async (req, res) => {
     },
   ];
 
-  if (id !== 'null') {
+  if (id !== 'null' && id !== 'undefined') {
     aggregatorOpts.unshift({ $match: { open: true, sectorID: id } });
 
     aggregatorOpts.unshift({
@@ -127,7 +127,7 @@ const demandsSectorsStatistic = async (req, res) => {
     },
   ];
 
-  if (id !== 'null' && id !== undefined) {
+  if (id !== 'null' && id !== 'undefined') {
     try {
       const objectID = mongoose.Types.ObjectId(id);
       aggregatorOpts.unshift({

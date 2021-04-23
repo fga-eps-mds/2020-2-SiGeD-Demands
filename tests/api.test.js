@@ -1,6 +1,7 @@
 const request = require('supertest');
 const app = require('../src/index');
 const jwt = require('jsonwebtoken');
+const { categoryId } = require('../src/Controllers/CategoryController');
 
 describe('Sample Test', () => {
   // Saving categories ids to use when create demands constants
@@ -360,6 +361,28 @@ describe('Sample Test', () => {
   it('Get sector statistics', async (done) => {
     const res = await request(app).get('/statistic/sector?id=null').set('x-access-token', token);
     expect(res.statusCode).toBe(200);
+    expect(res.body[0].total).toBe(1);
+    done();
+  })
+
+  it('Get sector statistics filtered by category', async (done) => {
+    const resCategory = await request(app).post('/category/create').set('x-access-token', token).send(category);
+    const categoryId3 = resCategory.body._id;
+    console.log(categoryId3);
+    const statisticDemand = {
+      name: 'Statistic Demand',
+      description: 'Descrição da Demanda de estatistica',
+      process: '000000',
+      categoryID: [categoryId3],
+      sectorID: '6064ffa9942d5e008c0734dc',
+      clientID: '6054dacb934bd000d7ca623b',
+      userID: '60578028cb9349004580fb8d'
+    }
+    console.log(statisticDemand);
+    await request(app).post('/demand/create').set('x-access-token', token).send(statisticDemand);
+    const res = await request(app).get(`/statistic/sector?id=${categoryId3}`).set('x-access-token', token);
+    expect(res.statusCode).toBe(200);
+    console.log(res.body);
     expect(res.body[0].total).toBe(1);
     done();
   })
