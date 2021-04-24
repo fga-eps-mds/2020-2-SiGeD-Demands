@@ -368,7 +368,6 @@ describe('Sample Test', () => {
   it('Get sector statistics filtered by category', async (done) => {
     const resCategory = await request(app).post('/category/create').set('x-access-token', token).send(category);
     const categoryId3 = resCategory.body._id;
-    console.log(categoryId3);
     const statisticDemand = {
       name: 'Statistic Demand',
       description: 'Descrição da Demanda de estatistica',
@@ -378,11 +377,9 @@ describe('Sample Test', () => {
       clientID: '6054dacb934bd000d7ca623b',
       userID: '60578028cb9349004580fb8d'
     }
-    console.log(statisticDemand);
     await request(app).post('/demand/create').set('x-access-token', token).send(statisticDemand);
     const res = await request(app).get(`/statistic/sector?id=${categoryId3}`).set('x-access-token', token);
     expect(res.statusCode).toBe(200);
-    console.log(res.body);
     expect(res.body[0].total).toBe(1);
     done();
   })
