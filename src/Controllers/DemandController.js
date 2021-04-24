@@ -1,6 +1,8 @@
+const mongoose = require('mongoose');
 const moment = require('moment-timezone');
 const axios = require('axios');
 const Demand = require('../Models/DemandSchema');
+const Category = require('../Models/CategorySchema');
 const validation = require('../utils/validate');
 
 const getClients = async (req, res, token) => {
@@ -69,6 +71,88 @@ const demandGet = async (req, res) => {
   }
   const demands = await Demand.find().populate('categoryID');
   return res.json(demands);
+};
+
+const demandsCategoriesStatistic = async (req, res) => {
+  const { id } = req.query;
+
+  const aggregatorOpts = [
+    { $unwind: '$categoryID' },
+    {
+      $lookup: {
+        from: Category.collection.name,
+        localField: 'categoryID',
+        foreignField: '_id',
+        as: 'categories',
+      },
+    },
+    {
+      $group: {
+        _id: '$categoryID',
+        categories: { $first: '$categories' },
+        demandas: { $sum: 1 },
+      },
+    },
+  ];
+
+  if (id !== 'null' && id !== 'undefined') {
+    aggregatorOpts.unshift({ $match: { open: true, sectorID: id } });
+
+    aggregatorOpts.unshift({
+      $addFields: {
+        sectorID: { $arrayElemAt: ['$sectorHistory.sectorID', -1] },
+      },
+    });
+  } else {
+    aggregatorOpts.unshift({ $match: { open: true } });
+  }
+
+  try {
+    const statistics = await Demand.aggregate(aggregatorOpts).exec();
+    return res.json(statistics);
+  } catch {
+    return res.status(400).json({ err: 'failed to generate statistics' });
+  }
+};
+
+const demandsSectorsStatistic = async (req, res) => {
+  const { id } = req.query;
+
+  const aggregatorOpts = [
+    {
+      $group: {
+        _id: { $last: '$sectorHistory.sectorID' },
+        total: { $sum: 1 },
+      },
+    },
+  ];
+
+  if (id !== 'null' && id !== 'undefined') {
+    try {
+      const objectID = mongoose.Types.ObjectId(id);
+      aggregatorOpts.unshift({
+        $match: {
+          open: true,
+          categoryID: objectID,
+        },
+      });
+    } catch (err) {
+      console.error(err.message);
+    }
+  } else {
+    aggregatorOpts.unshift({
+      $match: {
+        open: true,
+      },
+    });
+  }
+
+  try {
+    const statistics = await Demand.aggregate(aggregatorOpts).exec();
+    return res.json(statistics);
+  } catch (err) {
+    return res.status(400).json({ err: 'failed to generate statistics' });
+  }
 };
 
 const demandCreate = async (req, res) => {
@@ -334,4 +418,6 @@ module.exports = {
   demandGetWithClientsNames,
   updateDemandUpdate,
   deleteDemandUpdate,
+  demandsCategoriesStatistic,
+  demandsSectorsStatistic,
 };
