@@ -12,3 +12,12 @@ jobs:
     - name: Tests check
       run: docker network create siged_backend && docker-compose run api_demands bash -c  "yarn && yarn jest --coverage --forceExit"
 
+    - name: Test & publish code coverage
+      uses: paambaati/codeclimate-action@v2.7.5
+      env:
+        CC_TEST_REPORTER_ID: ${{ secrets.CODECLIMATE_TOKEN }}
+        
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
