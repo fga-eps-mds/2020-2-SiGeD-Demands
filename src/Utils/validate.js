@@ -30,6 +30,20 @@ const validateCategory = (name, description, color) => {
   return errors;
 };
 
+const validateAlert = (name, description, date) => {
+  const errors = [];
+
+  if (!name) {
+    errors.push('invalid name');
+  } if (!description) {
+    errors.push('invalid description');
+  } if (!date) {
+    errors.push('invalid date');
+  }
+
+  return errors;
+};
+
 const validateDemand = (
   name, description, categoryID, sectorID, clientID, userID,
 ) => {
@@ -76,6 +90,7 @@ const validateDemandUpdate = (
 
 module.exports = {
   validateCategory,
+  validateAlert,
   validateDemand,
   validateOpen,
   validateDemandUpdate,
