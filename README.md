@@ -1,5 +1,8 @@
 # API de Demandas
 [![License: GPL-3.0](https://img.shields.io/badge/License-GPL3-blue.svg)](https://opensource.org/licenses/gpl-3.0.html)
+[![codecov](https://codecov.io/gh/fga-eps-mds/2020-2-SiGeD-Demands/branch/master/graph/badge.svg?token=I08UG1R8HC)](https://codecov.io/gh/fga-eps-mds/2020-2-SiGeD-Demands)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=fga-eps-mds_2020-2-G4-Demands&metric=alert_status)](https://sonarcloud.io/dashboard?id=fga-eps-mds_2020-2-G4-Demands)
+[![Maintainability](https://api.codeclimate.com/v1/badges/9e950d2214a735d2ba4b/maintainability)](https://codeclimate.com/github/fga-eps-mds/2020-2-SiGeD-Demands/maintainability)
 
 Essa API faz parte da arquitetura de microsserviços do projeto [`SiGeD`](https://github.com/fga-eps-mds/2020-2-SiGeD), sua funcionalidade é possibilitar o controle dos dados das demandas. 
 
