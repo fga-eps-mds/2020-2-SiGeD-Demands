@@ -4,6 +4,8 @@ const Demand = require('../Models/DemandSchema');
 const Category = require('../Models/CategorySchema');
 const validation = require('../Utils/validate');
 const { getClients } = require('../Services/Axios/clientService');
+const verifyChanges = require('../utils/verifyChanges');
+const userConnection = require('../utils/userConnection');
 
 const demandGetWithClientsNames = async (req, res) => {
   try {
@@ -150,34 +152,50 @@ const demandsSectorsStatistic = async (req, res) => {
 };
 
 const demandCreate = async (req, res) => {
-  const {
-    name, description, process, categoryID, sectorID, clientID, userID,
-  } = req.body;
+  try {
+    const {
+      name, description, process, categoryID, sectorID, clientID, userID,
+    } = req.body;
 
-  const validFields = validation.validateDemand(
-    name, description, categoryID, sectorID, clientID, userID,
-  );
-  if (validFields.length) {
-    return res.status(400).json({ status: validFields });
+    const validFields = validation.validateDemand(
+      name, description, categoryID, sectorID, clientID, userID,
+    );
+    if (validFields.length) {
+      return res.status(400).json({ status: validFields });
+    }
+    const token = req.headers['x-access-token'];
+
+    const userConnections = await userConnection.checkUserPermission(userID, token);
+
+    if (userConnections.error) {
+      return res.status(400).json({ message: userConnections.error });
+    }
+    const date = moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate();
+    const newDemand = await Demand.create({
+      name,
+      description,
+      process: process || '',
+      categoryID,
+      sectorHistory: {
+        sectorID,
+        createdAt: date,
+        updatedAt: date,
+      },
+      clientID,
+      userID,
+      demandHistory:{
+        userID,
+        date,
+        label: 'created'
+      },
+      createdAt: date,
+      updatedAt: date,
+    });
+
+    return res.json(newDemand);
+  } catch (err) {
+    return res.status(400).json({ message: 'Failed to create demand' });
   }
-
-  const newDemand = await Demand.create({
-    name,
-    description,
-    process: process || '',
-    categoryID,
-    sectorHistory: {
-      sectorID,
-      createdAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
-      updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
-    },
-    clientID,
-    userID,
-    createdAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
-    updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
-  });
-
-  return res.json(newDemand);
 };
 
 const demandUpdate = async (req, res) => {
@@ -195,6 +213,15 @@ const demandUpdate = async (req, res) => {
   }
 
   try {
+    const token = req.headers['x-access-token'];
+
+    const userConnections = await userConnection.checkUserPermission(userID, token);
+
+    if (userConnections.error) {
+      return res.status(400).json({ message: userConnections.error });
+    }
+
+    const demandHistory = await verifyChanges(req.body, id);
     const updateStatus = await Demand.findOneAndUpdate({ _id: id }, {
       name,
       description,
@@ -203,8 +230,9 @@ const demandUpdate = async (req, res) => {
       sectorID,
       clientID,
       userID,
+      demandHistory,
       updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
-    }, { new: true }, (user) => user);
+    }, { new: true }, (user) => console.log('users', user));
     return res.json(updateStatus);
   } catch {
     return res.status(400).json({ err: 'invalid id' });
@@ -400,6 +428,43 @@ const deleteDemandUpdate = async (req, res) => {
   }
 };
 
+const history = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    let error = '';
+    const token = req.headers['x-access-token'];
+    const demandFound = await Demand.findOne({ _id: id });
+    const history = await Promise.all(demandFound.demandHistory.map(async (elem) => {
+      const user = await userConnection.getUser(elem.userID, token);
+
+      if (user.error) {
+        error = user.error
+        return
+      }
+      return {
+        label: elem.label,
+        before: elem.before,
+        after: elem.after,
+        date: elem.date,
+        user: {
+          _id: user._id,
+          name: user.name,
+          sector: user.sector,
+          role: user.role
+        }
+      }
+    }))
+    if (error) {
+      return res.status(400).json({ message: error });
+    }
+    return res.json(history)
+
+  } catch (error) {
+    return res.status(400).json({ message: error.keyValue });
+  }
+}
+
 module.exports = {
   demandGet,
   demandCreate,
@@ -414,4 +479,5 @@ module.exports = {
   deleteDemandUpdate,
   demandsCategoriesStatistic,
   demandsSectorsStatistic,
+  history
 };
