@@ -18,6 +18,10 @@ const alertSchema = new mongoose.Schema({
     require: true,
     default: false,
   },
+  demandID: {
+    type: String,
+    require: true,
+  },
   createdAt: {
     type: Date,
     require: true,

@@ -30,7 +30,7 @@ const validateCategory = (name, description, color) => {
   return errors;
 };
 
-const validateAlert = (name, description, date) => {
+const validateAlert = (name, description, date, demandID) => {
   const errors = [];
 
   if (!name) {
@@ -39,6 +39,8 @@ const validateAlert = (name, description, date) => {
     errors.push('invalid description');
   } if (!date) {
     errors.push('invalid date');
+  } if (!demandID) {
+    errors.push('invalid demandID');
   }
 
   return errors;

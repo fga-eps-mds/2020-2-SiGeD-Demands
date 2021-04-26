@@ -917,7 +917,48 @@ describe('Sample Test', () => {
     expect(res.body).toEqual({ "message": "Demand not found" });
     done();
   });
-});
+
+  const alert = {
+    name: 'Alerta',
+    description: 'Descrição',
+    date: '25/04/2021',
+    alertClient: true,
+    demandID: '000000000abcdefgh'
+  };
+
+  it('Post alert', async (done) => {
+    const res = await request(app).post('/alert/create').set('x-access-token', token).send(alert);
+    expect(res.statusCode).toBe(200);
+    expect(res.body.name).toBe(alert.name);
+    expect(res.body.description).toBe(alert.description);
+    expect(res.body.date).toBe(alert.date);
+    expect(res.body.alertClient).toBe(alert.alertClient);
+    expect(res.body.demandID).toBe(alert.demandID);
+    done();
+  });
+
+  const alertError = {
+  };
+
+  it('Post alert validation error', async (done) => {
+    const res = await request(app).post('/alert/create').set('x-access-token', token).send(alertError);
+    expect(res.statusCode).toBe(400);
+    expect(res.body.status).toEqual(['invalid name', 'invalid description', 'invalid date', 'invalid demandID']);
+    done();
+  });
+
+  it('Get alerts', async (done) => {
+    const res = await request(app).get('/alert').set('x-access-token', token);
+    expect(res.statusCode).toBe(200);
+    expect(res.body[res.body.length - 1].name).toBe(alert.name);
+    expect(res.body[res.body.length - 1].description).toBe(alert.description);
+    expect(res.body[res.body.length - 1].date).toBe(alert.date);
+    expect(res.body[res.body.length - 1].alertClient).toBe(alert.alertClient);
+    expect(res.body[res.body.length - 1].demandID).toBe(alert.demandID);
+    done();
+  });
+
+})
 
 afterAll(async (done) => {
   done();
