@@ -39,25 +39,25 @@ const DemandSchema = new mongoose.Schema({
   demandHistory: [{
     userID: {
       type: String,
-      require: true
+      require: true,
     },
     date: {
       type: Date,
-      require: true
+      require: true,
     },
     label: {
       type: String,
-      require: true
+      require: true,
     },
     before: {
       type: String,
       require: true,
-      default: ''
+      default: '',
     },
     after: {
       type: String,
       require: true,
-      default: ''
+      default: '',
     },
   }],
   clientID: {

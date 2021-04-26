@@ -183,10 +183,10 @@ const demandCreate = async (req, res) => {
       },
       clientID,
       userID,
-      demandHistory:{
+      demandHistory: {
         userID,
         date,
-        label: 'created'
+        label: 'created',
       },
       createdAt: date,
       updatedAt: date,
@@ -435,12 +435,12 @@ const history = async (req, res) => {
     let error = '';
     const token = req.headers['x-access-token'];
     const demandFound = await Demand.findOne({ _id: id });
-    const history = await Promise.all(demandFound.demandHistory.map(async (elem) => {
+    const userHistory = await Promise.all(demandFound.demandHistory.map(async (elem) => {
       const user = await userConnection.getUser(elem.userID, token);
 
       if (user.error) {
-        error = user.error
-        return
+        error = user.error;
+        return;
       }
       return {
         label: elem.label,
@@ -451,19 +451,18 @@ const history = async (req, res) => {
           _id: user._id,
           name: user.name,
           sector: user.sector,
-          role: user.role
-        }
-      }
-    }))
+          role: user.role,
+        },
+      };
+    }));
     if (error) {
       return res.status(400).json({ message: error });
     }
-    return res.json(history)
-
+    return res.json(userHistory);
   } catch (error) {
     return res.status(400).json({ message: error.keyValue });
   }
-}
+};
 
 module.exports = {
   demandGet,
@@ -479,5 +478,5 @@ module.exports = {
   deleteDemandUpdate,
   demandsCategoriesStatistic,
   demandsSectorsStatistic,
-  history
+  history,
 };
