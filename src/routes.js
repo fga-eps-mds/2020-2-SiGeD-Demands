@@ -27,5 +27,6 @@ routes.get('/statistic/category', verifyJWT, DemandController.demandsCategoriesS
 routes.get('/statistic/sector', verifyJWT, DemandController.demandsSectorsStatistic);
 routes.post('/alert/create', verifyJWT, AlertController.alertCreate);
 routes.get('/alert', verifyJWT, AlertController.alertGet);
+routes.get('/alert/demand/:demandID', verifyJWT, AlertController.alertGetByDemandId);
 
 module.exports = routes;

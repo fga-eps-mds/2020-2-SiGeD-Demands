@@ -8,6 +8,28 @@ const alertGet = async (req, res) => {
   return res.json(alerts);
 };
 
+const alertGetByDemandId = async (req, res) => {
+  const { demandID } = req.params;
+
+  const filteredAlerts = [];
+  const dateNow =  moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DD')).toDate();
+  const sevenDaysAfter = moment.utc(moment.tz('America/Sao_Paulo').add(7, 'days').format('YYYY-MM-DD')).toDate();
+
+  try{
+    const alerts = await Alert.find({ demandID });
+    alerts.map((alert) => { 
+      if(moment(alert.date).isSameOrBefore(sevenDaysAfter)){
+        if(moment(alert.date).isSameOrAfter(dateNow)){
+        filteredAlerts.push(alert);
+        }
+      }
+    });
+    return res.status(200).json(filteredAlerts);
+  } catch {
+    return res.status(400).json({ err: 'Invalid demandID' });
+  }
+};
+
 const alertCreate = async (req, res) => {
   const {
     name, description, date, alertClient, demandID,
@@ -36,5 +58,5 @@ const alertCreate = async (req, res) => {
 };
 
 module.exports = {
-  alertGet, alertCreate,
+  alertGet, alertCreate, alertGetByDemandId,
 };
