@@ -22,6 +22,10 @@ const alertSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
+  sectorID: {
+    type: String,
+    require: true,
+  },
   createdAt: {
     type: Date,
     require: true,

@@ -30,12 +30,34 @@ const alertGetByDemandId = async (req, res) => {
   }
 };
 
+const alertGetBySectorId = async (req, res) => {
+  const { sectorID } = req.params;
+
+  const filteredAlerts = [];
+  const dateNow =  moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DD')).toDate();
+  const sevenDaysAfter = moment.utc(moment.tz('America/Sao_Paulo').add(7, 'days').format('YYYY-MM-DD')).toDate();
+
+  try{
+    const alerts = await Alert.find({ sectorID });
+    alerts.map((alert) => { 
+      if(moment(alert.date).isSameOrBefore(sevenDaysAfter)){
+        if(moment(alert.date).isSameOrAfter(dateNow)){
+        filteredAlerts.push(alert);
+        }
+      }
+    });
+    return res.status(200).json(filteredAlerts);
+  } catch {
+    return res.status(400).json({ err: 'Invalid sectorID' });
+  }
+};
+
 const alertCreate = async (req, res) => {
   const {
-    name, description, date, alertClient, demandID,
+    name, description, date, alertClient, demandID, sectorID,
   } = req.body;
 
-  const validFields = validation.validateAlert(name, description, date, demandID);
+  const validFields = validation.validateAlert(name, description, date, demandID, sectorID);
 
   if (validFields.length) {
     return res.status(400).json({ status: validFields });
@@ -48,6 +70,7 @@ const alertCreate = async (req, res) => {
       date,
       alertClient,
       demandID,
+      sectorID,
       createdAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
       updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
     });
@@ -58,5 +81,5 @@ const alertCreate = async (req, res) => {
 };
 
 module.exports = {
-  alertGet, alertCreate, alertGetByDemandId,
+  alertGet, alertCreate, alertGetByDemandId, alertGetBySectorId,
 };

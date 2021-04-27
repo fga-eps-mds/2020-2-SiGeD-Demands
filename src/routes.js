@@ -28,5 +28,6 @@ routes.get('/statistic/sector', verifyJWT, DemandController.demandsSectorsStatis
 routes.post('/alert/create', verifyJWT, AlertController.alertCreate);
 routes.get('/alert', verifyJWT, AlertController.alertGet);
 routes.get('/alert/demand/:demandID', verifyJWT, AlertController.alertGetByDemandId);
+routes.get('/alert/sector/:sectorID', verifyJWT, AlertController.alertGetBySectorId);
 
 module.exports = routes;
