@@ -1,6 +1,6 @@
 const moment = require('moment-timezone');
 const Alert = require('../Models/AlertSchema');
-const validation = require('../utils/validate');
+const validation = require('../Utils/validate');
 
 const alertGet = async (req, res) => {
   const alerts = await Alert.find();
@@ -12,21 +12,21 @@ const alertGetByDemandId = async (req, res) => {
   const { demandID } = req.params;
 
   const filteredAlerts = [];
-  const dateNow =  moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DD')).toDate();
+  const dateNow = moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DD')).toDate();
   const sevenDaysAfter = moment.utc(moment.tz('America/Sao_Paulo').add(7, 'days').format('YYYY-MM-DD')).toDate();
 
-  try{
+  try {
     const alerts = await Alert.find({ demandID });
-    alerts.map((alert) => { 
-      if(moment(alert.date).isSameOrBefore(sevenDaysAfter)){
-        if(moment(alert.date).isSameOrAfter(dateNow)){
-        filteredAlerts.push(alert);
+    alerts.forEach((alert) => {
+      if (moment(alert.date).isSameOrBefore(sevenDaysAfter)) {
+        if (moment(alert.date).isSameOrAfter(dateNow)) {
+          filteredAlerts.push(alert);
         }
       }
     });
     return res.status(200).json(filteredAlerts);
   } catch {
-    return res.status(400).json({ err: 'Invalid demandID' });
+    return res.status(400).json({ err: 'It was not possible to get alerts by demand ID' });
   }
 };
 
@@ -34,21 +34,21 @@ const alertGetBySectorId = async (req, res) => {
   const { sectorID } = req.params;
 
   const filteredAlerts = [];
-  const dateNow =  moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DD')).toDate();
+  const dateNow = moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DD')).toDate();
   const sevenDaysAfter = moment.utc(moment.tz('America/Sao_Paulo').add(7, 'days').format('YYYY-MM-DD')).toDate();
 
-  try{
+  try {
     const alerts = await Alert.find({ sectorID });
-    alerts.map((alert) => { 
-      if(moment(alert.date).isSameOrBefore(sevenDaysAfter)){
-        if(moment(alert.date).isSameOrAfter(dateNow)){
-        filteredAlerts.push(alert);
+    alerts.forEach((alert) => {
+      if (moment(alert.date).isSameOrBefore(sevenDaysAfter)) {
+        if (moment(alert.date).isSameOrAfter(dateNow)) {
+          filteredAlerts.push(alert);
         }
       }
     });
     return res.status(200).json(filteredAlerts);
   } catch {
-    return res.status(400).json({ err: 'Invalid sectorID' });
+    return res.status(400).json({ err: 'It was not possible to get alerts by sector ID' });
   }
 };
 
