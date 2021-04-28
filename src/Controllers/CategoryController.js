@@ -1,6 +1,6 @@
 const moment = require('moment-timezone');
 const Category = require('../Models/CategorySchema');
-const validation = require('../utils/validate');
+const validation = require('../Utils/validate');
 
 const categoryGet = async (req, res) => {
   const categories = await Category.find();

@@ -1,5 +1,5 @@
 const express = require('express');
-const { verifyJWT } = require('./utils/functionsJWT');
+const { verifyJWT } = require('./Utils/functionsJWT');
 
 const routes = express.Router();
 const CategoryController = require('./Controllers/CategoryController');
