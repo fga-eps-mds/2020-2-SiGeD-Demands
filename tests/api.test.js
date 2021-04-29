@@ -2,6 +2,7 @@ const request = require('supertest');
 const app = require('../src/index');
 const jwt = require('jsonwebtoken');
 const { categoryId } = require('../src/Controllers/CategoryController');
+const mongoose = require('mongoose');
 
 describe('Sample Test', () => {
   // Saving categories ids to use when create demands constants
@@ -250,24 +251,26 @@ describe('Sample Test', () => {
 
   it('Get demand', async (done) => {
     const res = await request(app).get('/demand/').set('x-access-token', token);
-    expect(res.body[0].name).toBe(demand.name);
-    expect(res.body[0].clientID).toBe(demand.clientID);
-    expect(res.body[0].process).toBe(demand.process);
-    expect(res.body[0].sectorHistory[0].sectorID).toBe(demand.sectorID);
-    expect(res.body[0].userID).toBe(demand.userID);
-    expect(res.body[0].description).toBe(demand.description);
+    const lastIdx = res.body.length - 1; 
+    expect(res.body[lastIdx].name).toBe(demand.name);
+    expect(res.body[lastIdx].clientID).toBe(demand.clientID);
+    expect(res.body[lastIdx].process).toBe(demand.process);
+    expect(res.body[lastIdx].sectorHistory[0].sectorID).toBe(demand.sectorID);
+    expect(res.body[lastIdx].userID).toBe(demand.userID);
+    expect(res.body[lastIdx].description).toBe(demand.description);
     expect(res.statusCode).toBe(200);
     done();
   });
 
   it('Get demand', async (done) => {
     const res = await request(app).get('/demand/?open=true').set('x-access-token', token);
-    expect(res.body[0].name).toBe(demand.name);
-    expect(res.body[0].process).toBe(demand.process);
-    expect(res.body[0].clientID).toBe(demand.clientID);
-    expect(res.body[0].sectorHistory[0].sectorID).toBe(demand.sectorID);
-    expect(res.body[0].description).toBe(demand.description);
-    expect(res.body[0].userID).toBe(demand.userID);
+    const lastIdx = res.body.length - 1;
+    expect(res.body[lastIdx].name).toBe(demand.name);
+    expect(res.body[lastIdx].process).toBe(demand.process);
+    expect(res.body[lastIdx].clientID).toBe(demand.clientID);
+    expect(res.body[lastIdx].sectorHistory[0].sectorID).toBe(demand.sectorID);
+    expect(res.body[lastIdx].description).toBe(demand.description);
+    expect(res.body[lastIdx].userID).toBe(demand.userID);
     expect(res.statusCode).toBe(200);
     done();
   });
@@ -306,14 +309,15 @@ describe('Sample Test', () => {
   // Back to getting demands
   it('Get closed demand', async (done) => {
     const res = await request(app).get('/demand?open=false').set('x-access-token', token);
+    const lastIdx = res.body.length - 1;
     expect(res.statusCode).toBe(200);
-    expect(res.body[0].name).toBe(falseDemand.name);
-    expect(res.body[0].clientID).toBe(falseDemand.clientID);
-    expect(res.body[0].process).toBe(falseDemand.process);
-    expect(res.body[0].sectorHistory[0].sectorID).toBe(falseDemand.sectorID);
-    expect(res.body[0].userID).toBe(falseDemand.userID);
-    expect(res.body[0].description).toBe(falseDemand.description);
-    expect(res.body[0].open).toBe(false);
+    expect(res.body[lastIdx].name).toBe(falseDemand.name);
+    expect(res.body[lastIdx].clientID).toBe(falseDemand.clientID);
+    expect(res.body[lastIdx].process).toBe(falseDemand.process);
+    expect(res.body[lastIdx].sectorHistory[0].sectorID).toBe(falseDemand.sectorID);
+    expect(res.body[lastIdx].userID).toBe(falseDemand.userID);
+    expect(res.body[lastIdx].description).toBe(falseDemand.description);
+    expect(res.body[lastIdx].open).toBe(false);
     done();
   });
 
@@ -346,22 +350,25 @@ describe('Sample Test', () => {
   // statisticas tests
   it('Get category statistics', async (done) => {
     const res = await request(app).get('/statistic/category?id=null').set('x-access-token', token);
+    const lastIdx = res.body.length - 1;
     expect(res.statusCode).toBe(200);
-    expect(res.body[0].demandas).toBe(1);
+    expect(res.body[lastIdx].demandas).toBe(1);
     done();
   })
 
   it('Get category statistics filtered by sector', async (done) => {
     const res = await request(app).get('/statistic/category?id=6064ffa9942d5e008c0734dc').set('x-access-token', token);
+    const lastIdx = res.body.length - 1;
     expect(res.statusCode).toBe(200);
-    expect(res.body[0].demandas).toBe(1);
+    expect(res.body[lastIdx].demandas).toBe(1);
     done();
   })
 
   it('Get sector statistics', async (done) => {
     const res = await request(app).get('/statistic/sector?id=null').set('x-access-token', token);
+    const lastIdx = res.body.length - 1;
     expect(res.statusCode).toBe(200);
-    expect(res.body[0].total).toBe(1);
+    expect(res.body[lastIdx].total).toBe(1);
     done();
   })
 
@@ -379,8 +386,9 @@ describe('Sample Test', () => {
     }
     await request(app).post('/demand/create').set('x-access-token', token).send(statisticDemand);
     const res = await request(app).get(`/statistic/sector?id=${categoryId3}`).set('x-access-token', token);
+    const lastIdx = res.body.length - 1;
     expect(res.statusCode).toBe(200);
-    expect(res.body[0].total).toBe(1);
+    expect(res.body[lastIdx].total).toBe(1);
     done();
   })
 
@@ -751,7 +759,26 @@ describe('Sample Test', () => {
     expect(res.body).toEqual({ "message": "failure" });
     done();
   });
+
+  it('Return demands with clients names', async () => {
+    // Create demand with client from mock
+    const demand = {
+      name: 'Nome da Demanda',
+      description: 'Descrição da Demanda',
+      process: '000000',
+      categoryID: ['6070b70835599b005b48b32d', '6070b71635599b005b48b32e'],
+      sectorID: '6064ffa9942d5e008c0734dc',
+      clientID: '6085e65a664ee00049cc7638',
+      userID: '60578028cb9349004580fb8d'
+    }
+    const demand_created = await request(app).post('/demand/create').set('x-access-token', token).send(demand);
+    const res = await request(app).get('/clientsNames').set('x-access-token', token)
+
+    const lastIdx = res.body.length - 1; // Get last demand on list
+    expect(res.body[lastIdx].clientName).toEqual("Julia Batista");
+  })
 });
+ 
 afterAll(async (done) => {
   done();
 });

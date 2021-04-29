@@ -1,0 +1,35 @@
+[
+  {
+    "active": true,
+    "_id": "6085e65a664ee00049cc7638",
+    "name": "Julia Batista",
+    "cpf": "60814144004",
+    "email": "juliabatista@email.com",
+    "phone": "987643899",
+    "secondaryPhone": "997865458",
+    "office": "Diretor",
+    "location": "DPPCS",
+    "address": "Brasília",
+    "history": [
+      {
+        "before": "",
+        "after": "",
+        "_id": "6085e65a664ee00049cc7639",
+        "userID": "608335084771520040cea104",
+        "date": "2021-04-25T18:59:54.000Z",
+        "label": "created"
+      },
+      {
+        "before": "Julia Batist",
+        "after": "Julia Batista",
+        "_id": "6085e6ae664ee00049cc763b",
+        "label": "name",
+        "userID": "608335084771520040cea104",
+        "date": "2021-04-25T19:01:18.000Z"
+      }
+    ],
+    "createdAt": "2021-04-25T18:59:54.000Z",
+    "updatedAt": "2021-04-25T19:06:27.000Z",
+    "__v": 0
+  }
+]

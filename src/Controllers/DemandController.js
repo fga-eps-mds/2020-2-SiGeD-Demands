@@ -1,19 +1,9 @@
 const mongoose = require('mongoose');
 const moment = require('moment-timezone');
-const axios = require('axios');
 const Demand = require('../Models/DemandSchema');
 const Category = require('../Models/CategorySchema');
-const validation = require('../utils/validate');
-
-const getClients = async (req, res, token) => {
-  try {
-    const clients = await axios.get(`http://${process.env.CLIENTS_URL}:3002/clients`, { headers: { 'x-access-token': token } })
-      .then((response) => (response.data));
-    return clients;
-  } catch {
-    return res.status(400).json({ err: 'Could not connect to api_clients' });
-  }
-};
+const validation = require('../Utils/validate');
+const { getClients } = require('../Services/Axios/clientService');
 
 const demandGetWithClientsNames = async (req, res) => {
   try {
@@ -21,7 +11,11 @@ const demandGetWithClientsNames = async (req, res) => {
     const { open } = req.query;
     const demandsWithClients = [];
     let demands;
-    const clients = await getClients(req, res, token);
+    const clients = await getClients(token);
+
+    if (clients.error) {
+      return res.status(400).json({ err: clients.error });
+    }
 
     if (open === 'false') {
       demands = await Demand.find({ open }).populate('categoryID');
@@ -56,7 +50,7 @@ const demandGetWithClientsNames = async (req, res) => {
     });
     return res.json(demandsWithClients);
   } catch {
-    return res.status(400).json({ err: 'Could not connect to api_clients' });
+    return res.status(400).json({ err: 'Could not get demands' });
   }
 };
 
