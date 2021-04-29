@@ -49,7 +49,6 @@ describe('Sample Test', () => {
       userID: '6089c3538dfebe00555bc17e'
     }
     const res = await request(app).post('/demand/create').set('x-access-token', token).send(demand);
-    console.log(res.body)
     demand_id = res.body._id;
   })
 
