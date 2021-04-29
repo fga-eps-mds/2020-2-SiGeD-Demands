@@ -106,3 +106,5 @@ dist
 yarn.lock
 
 scripts/.env
+
+.DS_Store
