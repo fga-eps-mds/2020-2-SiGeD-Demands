@@ -232,7 +232,7 @@ const demandUpdate = async (req, res) => {
       userID,
       demandHistory,
       updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
-    }, { new: true }, (user) => console.log('users', user));
+    }, { new: true }, (err) => err);
     return res.json(updateStatus);
   } catch {
     return res.status(400).json({ err: 'invalid id' });

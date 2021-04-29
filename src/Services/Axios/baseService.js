@@ -12,5 +12,5 @@ const APIUsers = axios.create({
 
 module.exports = {
   APIClients,
-  APIUsers
+  APIUsers,
 };
