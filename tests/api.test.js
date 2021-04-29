@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 describe('Sample Test', () => {
   // Saving categories ids to use when create demands constants
   let category_id;
+  let demand_id;
 
   // Categories test comes first.
 
@@ -35,6 +36,22 @@ describe('Sample Test', () => {
   }, process.env.SECRET, {
     expiresIn: 240,
   });
+
+  beforeAll(async () => {
+    // Create demand with client and user from mock
+    const demand = {
+      name: 'Nome da Demanda',
+      description: 'Descrição da Demanda',
+      process: '000000',
+      categoryID: ['6070b70835599b005b48b32d', '6070b71635599b005b48b32e'],
+      sectorID: '606281ba4772b00034eb13fe',
+      clientID: '6085e65a664ee00049cc7638',
+      userID: '6089c3538dfebe00555bc17e'
+    }
+    const res = await request(app).post('/demand/create').set('x-access-token', token).send(demand);
+    console.log(res.body)
+    demand_id = res.body._id;
+  })
 
 
   // Test API:
@@ -760,23 +777,26 @@ describe('Sample Test', () => {
     done();
   });
 
-  it('Return demands with clients names', async () => {
-    // Create demand with client from mock
-    const demand = {
-      name: 'Nome da Demanda',
-      description: 'Descrição da Demanda',
-      process: '000000',
-      categoryID: ['6070b70835599b005b48b32d', '6070b71635599b005b48b32e'],
-      sectorID: '6064ffa9942d5e008c0734dc',
-      clientID: '6085e65a664ee00049cc7638',
-      userID: '6089c3538dfebe00555bc17e'
-    }
-    const demand_created = await request(app).post('/demand/create').set('x-access-token', token).send(demand);
+  it('Return demands with clients names', async (done) => {
     const res = await request(app).get('/clientsNames').set('x-access-token', token)
-
     const lastIdx = res.body.length - 1; // Get last demand on list
     expect(res.body[lastIdx].clientName).toEqual("Julia Batista");
-  })
+    done();
+  });
+
+  it('Get demand history', async (done) => {
+    const res = await request(app).get(`/demand/history/${demand_id}`).set('x-access-token', token)
+    expect(res.body[0].label).toEqual("created");
+    expect(res.body[0].user.name).toEqual("Maria Joaquina");
+    done();
+  });
+
+  it('Get demand history error', async (done) => {
+    const res = await request(app).get(`/demand/history/123`).set('x-access-token', token);
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toEqual({ "message": "Demand not found" });
+    done();
+  });
 });
  
 afterAll(async (done) => {

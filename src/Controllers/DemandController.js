@@ -459,8 +459,8 @@ const history = async (req, res) => {
       return res.status(400).json({ message: error });
     }
     return res.json(userHistory);
-  } catch (error) {
-    return res.status(400).json({ message: error.keyValue });
+  } catch {
+    return res.status(400).json({ message: 'Demand not found' });
   }
 };
 
