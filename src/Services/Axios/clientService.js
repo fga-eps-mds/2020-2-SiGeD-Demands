@@ -1,4 +1,4 @@
-const { APIClients, bla } = require('./baseService.js');
+const { APIClients } = require('./baseService.js');
 
 const getClients = async (token) => {
   try {
@@ -6,11 +6,11 @@ const getClients = async (token) => {
       .then((response) => (response.data));
     return clients;
   } catch (err) {
-    console.log(err)
+    console.log(err);
     return { error: 'Could not connect to api_clients' };
   }
 };
 
 module.exports = {
-  getClients
-}
+  getClients,
+};

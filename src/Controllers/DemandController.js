@@ -13,7 +13,7 @@ const demandGetWithClientsNames = async (req, res) => {
     let demands;
     const clients = await getClients(token);
 
-    if(clients.error){
+    if (clients.error) {
       return res.status(400).json({ err: clients.error });
     }
 
