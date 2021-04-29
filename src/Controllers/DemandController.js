@@ -4,8 +4,8 @@ const Demand = require('../Models/DemandSchema');
 const Category = require('../Models/CategorySchema');
 const validation = require('../Utils/validate');
 const { getClients } = require('../Services/Axios/clientService');
-const verifyChanges = require('../utils/verifyChanges');
-const userConnection = require('../utils/userConnection');
+const { getUser } = require('../Services/Axios/userService');
+const verifyChanges = require('../Utils/verifyChanges');
 
 const demandGetWithClientsNames = async (req, res) => {
   try {
@@ -165,10 +165,10 @@ const demandCreate = async (req, res) => {
     }
     const token = req.headers['x-access-token'];
 
-    const userConnections = await userConnection.checkUserPermission(userID, token);
+    const user = await getUser(userID, token);
 
-    if (userConnections.error) {
-      return res.status(400).json({ message: userConnections.error });
+    if (user.error) {
+      return res.status(400).json({ message: user.error });
     }
     const date = moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate();
     const newDemand = await Demand.create({
@@ -215,10 +215,10 @@ const demandUpdate = async (req, res) => {
   try {
     const token = req.headers['x-access-token'];
 
-    const userConnections = await userConnection.checkUserPermission(userID, token);
+    const user = await getUser(userID, token);
 
-    if (userConnections.error) {
-      return res.status(400).json({ message: userConnections.error });
+    if (user.error) {
+      return res.status(400).json({ message: user.error });
     }
 
     const demandHistory = await verifyChanges(req.body, id);
@@ -436,7 +436,7 @@ const history = async (req, res) => {
     const token = req.headers['x-access-token'];
     const demandFound = await Demand.findOne({ _id: id });
     const userHistory = await Promise.all(demandFound.demandHistory.map(async (elem) => {
-      const user = await userConnection.getUser(elem.userID, token);
+      const user = await getUser(elem.userID, token);
 
       if (user.error) {
         error = user.error;
