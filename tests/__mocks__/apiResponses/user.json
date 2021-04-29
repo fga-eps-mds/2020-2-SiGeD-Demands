@@ -1,0 +1,11 @@
+{
+  "temporaryPassword": false,
+  "_id": "6089c3538dfebe00555bc17e",
+  "name": "Maria Joaquina",
+  "email": "mariajoaquina@email.com",
+  "role": "admin",
+  "sector": "606fa89e15281a0040cff1fd",
+  "createdAt": "2021-04-28T17:19:31.000Z",
+  "updatedAt": "2021-04-28T17:27:29.000Z",
+  "__v": 0
+}
