@@ -70,7 +70,11 @@ const demandGet = async (req, res) => {
 };
 
 const demandsCategoriesStatistic = async (req, res) => {
-  const { id } = req.query;
+  const {
+    idSector, idCategory, initialDate, finalDate,
+  } = req.query;
+
+  const completeFinalDate = `${finalDate}T24:00:00`;
 
   const aggregatorOpts = [
     { $unwind: '$categoryID' },
@@ -91,16 +95,63 @@ const demandsCategoriesStatistic = async (req, res) => {
     },
   ];
 
-  if (id !== 'null' && id !== 'undefined') {
-    aggregatorOpts.unshift({ $match: { open: true, sectorID: id } });
-
-    aggregatorOpts.unshift({
-      $addFields: {
-        sectorID: { $arrayElemAt: ['$sectorHistory.sectorID', -1] },
-      },
-    });
-  } else {
-    aggregatorOpts.unshift({ $match: { open: true } });
+  try {
+    if (idSector && idSector !== 'null' && idSector !== 'undefined') {
+      if (idCategory && idCategory !== 'null' && idCategory !== 'undefined') {
+        const categoryId = mongoose.Types.ObjectId(idCategory);
+        aggregatorOpts.unshift({
+          $match: {
+            open: true,
+            sectorID: idSector,
+            categoryID: categoryId,
+            createdAt: {
+              $gte: new Date(initialDate),
+              $lte: new Date(completeFinalDate),
+            },
+          },
+        });
+      } else {
+        aggregatorOpts.unshift({
+          $match: {
+            open: true,
+            sectorID: idSector,
+            createdAt: {
+              $gte: new Date(initialDate),
+              $lte: new Date(completeFinalDate),
+            },
+          },
+        });
+      }
+      aggregatorOpts.unshift({
+        $addFields: {
+          sectorID: { $arrayElemAt: ['$sectorHistory.sectorID', -1] },
+        },
+      });
+    } else if (idCategory && idCategory !== 'null' && idCategory !== 'undefined') {
+      const categoryId = mongoose.Types.ObjectId(idCategory);
+      aggregatorOpts.unshift({
+        $match: {
+          open: true,
+          categoryID: categoryId,
+          createdAt: {
+            $gte: new Date(initialDate),
+            $lte: new Date(completeFinalDate),
+          },
+        },
+      });
+    } else {
+      aggregatorOpts.unshift({
+        $match: {
+          open: true,
+          createdAt: {
+            $gte: new Date(initialDate),
+            $lte: new Date(completeFinalDate),
+          },
+        },
+      });
+    }
+  } catch (err) {
+    console.error(err);
   }
 
   try {
@@ -112,7 +163,9 @@ const demandsCategoriesStatistic = async (req, res) => {
 };
 
 const demandsSectorsStatistic = async (req, res) => {
-  const { id } = req.query;
+  const { idCategory, initialDate, finalDate } = req.query;
+
+  const completeFinalDate = `${finalDate}T24:00:00`;
 
   const aggregatorOpts = [
     {
@@ -123,13 +176,17 @@ const demandsSectorsStatistic = async (req, res) => {
     },
   ];
 
-  if (id !== 'null' && id !== 'undefined') {
+  if (idCategory && idCategory !== 'null' && idCategory !== 'undefined') {
     try {
-      const objectID = mongoose.Types.ObjectId(id);
+      const objectID = mongoose.Types.ObjectId(idCategory);
       aggregatorOpts.unshift({
         $match: {
           open: true,
           categoryID: objectID,
+          createdAt: {
+            $gte: new Date(initialDate),
+            $lte: new Date(completeFinalDate),
+          },
         },
       });
     } catch (err) {
@@ -139,6 +196,10 @@ const demandsSectorsStatistic = async (req, res) => {
     aggregatorOpts.unshift({
       $match: {
         open: true,
+        createdAt: {
+          $gte: new Date(initialDate),
+          $lte: new Date(completeFinalDate),
+        },
       },
     });
   }
