@@ -832,7 +832,7 @@ describe('Sample Test', () => {
   });
   it('Update Demand Update userID error', async (done) => {
     const sectorIDError = {
-      userName: "Nome do Usuário",
+      userName: "Nome do usuário",
       description: "Descrição da Atualização de Demanda",
       userID: "",
       visibilityRestriction: true,
