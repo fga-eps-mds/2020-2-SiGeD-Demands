@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 describe('Sample Test', () => {
   // Saving categories ids to use when create demands constants
   let category_id;
+  let demand_id;
 
   // Categories test comes first.
 
@@ -35,6 +36,21 @@ describe('Sample Test', () => {
   }, process.env.SECRET, {
     expiresIn: 240,
   });
+
+  beforeAll(async () => {
+    // Create demand with client and user from mock
+    const demand = {
+      name: 'Nome da Demanda',
+      description: 'Descrição da Demanda',
+      process: '000000',
+      categoryID: ['6070b70835599b005b48b32d', '6070b71635599b005b48b32e'],
+      sectorID: '606281ba4772b00034eb13fe',
+      clientID: '6085e65a664ee00049cc7638',
+      userID: '6089c3538dfebe00555bc17e'
+    }
+    const res = await request(app).post('/demand/create').set('x-access-token', token).send(demand);
+    demand_id = res.body._id;
+  })
 
 
   // Test API:
@@ -183,7 +199,7 @@ describe('Sample Test', () => {
     categoryID: ['6070b70835599b005b48b32d', '6070b71635599b005b48b32e'],
     sectorID: '6064ffa9942d5e008c0734dc',
     clientID: '6054dacb934bd000d7ca623b',
-    userID: '60578028cb9349004580fb8d'
+    userID: '6089c3538dfebe00555bc17e'
   };
   const falseDemand = {
     name: 'Nome da Demanda',
@@ -192,7 +208,7 @@ describe('Sample Test', () => {
     categoryID: ['6070b70835599b005b48b32d', '6070b71635599b005b48b32e'],
     sectorID: '6064ffa9942d5e008c0734dc',
     clientID: '6054dacb934bd000d7ca623b',
-    userID: '60578028cb9349004580fb8d',
+    userID: '6089c3538dfebe00555bc17e',
   };
   const updatedSectorID = {
     sectorID: 'TESTE'
@@ -336,7 +352,7 @@ describe('Sample Test', () => {
       categoryID: ['6064ffa9942d5e008c07e61a'],
       sectorID: 'sectorID',
       clientID: 'clientID',
-      userID: 'userID'
+      userID: '6089c3538dfebe00555bc17e'
     };
     const res = await request(app).put(`/demand/update/${id}`).set('x-access-token', token).send(demandUpdate);
     expect(res.statusCode).toBe(200);
@@ -382,7 +398,7 @@ describe('Sample Test', () => {
       categoryID: [categoryId3],
       sectorID: '6064ffa9942d5e008c0734dc',
       clientID: '6054dacb934bd000d7ca623b',
-      userID: '60578028cb9349004580fb8d'
+      userID: '6089c3538dfebe00555bc17e'
     }
     await request(app).post('/demand/create').set('x-access-token', token).send(statisticDemand);
     const res = await request(app).get(`/statistic/sector?id=${categoryId3}`).set('x-access-token', token);
@@ -398,7 +414,7 @@ describe('Sample Test', () => {
       name: '',
       process: '4005',
       description: 'Retirar documento na DPSS',
-      userID: 'userID',
+      userID: '6089c3538dfebe00555bc17e',
       categoryID: 'categoryID',
       clientID: 'clientID',
       sectorID: 'sectorID'
@@ -418,7 +434,7 @@ describe('Sample Test', () => {
       categoryID: 'categoryID',
       description: '',
       sectorID: 'sectorID',
-      userID: 'userID',
+      userID: '6089c3538dfebe00555bc17e',
       clientID: 'clientID',
       process: '4005'
     }
@@ -436,7 +452,7 @@ describe('Sample Test', () => {
       categoryID: '',
       description: 'Retirar documento na DPSS',
       sectorID: 'sectorID',
-      userID: 'userID',
+      userID: '6089c3538dfebe00555bc17e',
       process: '4005',
       clientID: 'clientID',
       name: 'Retirada de documento'
@@ -458,7 +474,7 @@ describe('Sample Test', () => {
       categoryID: 'categoryID',
       description: 'Retirar documento na DPSS',
       process: '4005',
-      userID: 'userID'
+      userID: '6089c3538dfebe00555bc17e'
     }
 
     const res = await request(app)
@@ -477,7 +493,7 @@ describe('Sample Test', () => {
       process: '4005',
       description: 'Retirar documento na DPSS',
       clientID: '',
-      userID: 'userID',
+      userID: '6089c3538dfebe00555bc17e',
     }
 
     const res = await request(app)
@@ -512,7 +528,7 @@ describe('Sample Test', () => {
       name: 'Retirada de arma',
       categoryID: 'IDcategory',
       sectorID: 'IDsector',
-      userID: 'IDuser',
+      userID: '6089c3538dfebe00555bc17e',
       description: 'Retirar token',
       clientID: 'IDclient',
       process: '504'
@@ -528,7 +544,7 @@ describe('Sample Test', () => {
 
   it('Update demand without token', async () => {
     const demand = {
-      userID: 'IDuser',
+      userID: '6089c3538dfebe00555bc17e',
       sectorID: 'IDsector',
       categoryID: 'IDcategory',
       description: 'Retirar token',
@@ -547,7 +563,7 @@ describe('Sample Test', () => {
   it('Update demand with invalid token', async () => {
     const tokenFalho = 'abc123';
     const demand = {
-      userID: '839589v4c8984',
+      userID: '6089c3538dfebe00555bc17e',
       sectorID: 'jkncjh8e7c8nc4819c',
       categoryID: 'cewdu8eu8eceh882em21',
       description: 'Teste',
@@ -571,7 +587,7 @@ describe('Sample Test', () => {
     expect(res.body.clientID).toBe('clientID');
     expect(res.body.process).toBe('4005');
     expect(res.body.sectorHistory[0].sectorID).toBe(updatedSectorID.sectorID);
-    expect(res.body.userID).toBe('userID');
+    expect(res.body.userID).toBe('6089c3538dfebe00555bc17e');
     expect(res.body.description).toBe('Retirar documento na DPSS');
     done();
   });
@@ -598,7 +614,7 @@ describe('Sample Test', () => {
     expect(res.body.process).toBe('4005');
     expect(res.body.sectorHistory[0].sectorID).toBe(updatedSectorID.sectorID);
     expect(res.body.sectorHistory[1].sectorID).toBe(forwardSectorID.sectorID);
-    expect(res.body.userID).toBe('userID');
+    expect(res.body.userID).toBe('6089c3538dfebe00555bc17e');
     expect(res.body.description).toBe('Retirar documento na DPSS');
     done();
   });
@@ -636,7 +652,7 @@ describe('Sample Test', () => {
     expect(res.body.process).toBe('4005');
     expect(res.body.sectorHistory[0].sectorID).toBe(updatedSectorID.sectorID);
     expect(res.body.sectorHistory[1].sectorID).toBe(forwardSectorID.sectorID);
-    expect(res.body.userID).toBe('userID');
+    expect(res.body.userID).toBe('6089c3538dfebe00555bc17e');
     expect(res.body.description).toBe('Retirar documento na DPSS');
     expect(res.body.updateList[0].userName).toBe(demandUpdate.userName);
     expect(res.body.updateList[0].userSector).toBe(demandUpdate.userSector);
@@ -760,23 +776,26 @@ describe('Sample Test', () => {
     done();
   });
 
-  it('Return demands with clients names', async () => {
-    // Create demand with client from mock
-    const demand = {
-      name: 'Nome da Demanda',
-      description: 'Descrição da Demanda',
-      process: '000000',
-      categoryID: ['6070b70835599b005b48b32d', '6070b71635599b005b48b32e'],
-      sectorID: '6064ffa9942d5e008c0734dc',
-      clientID: '6085e65a664ee00049cc7638',
-      userID: '60578028cb9349004580fb8d'
-    }
-    const demand_created = await request(app).post('/demand/create').set('x-access-token', token).send(demand);
+  it('Return demands with clients names', async (done) => {
     const res = await request(app).get('/clientsNames').set('x-access-token', token)
-
     const lastIdx = res.body.length - 1; // Get last demand on list
     expect(res.body[lastIdx].clientName).toEqual("Julia Batista");
-  })
+    done();
+  });
+
+  it('Get demand history', async (done) => {
+    const res = await request(app).get(`/demand/history/${demand_id}`).set('x-access-token', token)
+    expect(res.body[0].label).toEqual("created");
+    expect(res.body[0].user.name).toEqual("Maria Joaquina");
+    done();
+  });
+
+  it('Get demand history error', async (done) => {
+    const res = await request(app).get(`/demand/history/123`).set('x-access-token', token);
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toEqual({ "message": "Demand not found" });
+    done();
+  });
 });
  
 afterAll(async (done) => {
