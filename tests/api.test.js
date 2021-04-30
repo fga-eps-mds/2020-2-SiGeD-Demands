@@ -267,7 +267,7 @@ describe('Sample Test', () => {
 
   it('Get demand', async (done) => {
     const res = await request(app).get('/demand/').set('x-access-token', token);
-    const lastIdx = res.body.length - 1; 
+    const lastIdx = res.body.length - 1;
     expect(res.body[lastIdx].name).toBe(demand.name);
     expect(res.body[lastIdx].clientID).toBe(demand.clientID);
     expect(res.body[lastIdx].process).toBe(demand.process);
@@ -761,7 +761,128 @@ describe('Sample Test', () => {
     expect(res.body.status).toEqual(['invalid important']);
     done();
   });
-
+  it('Update Demand Update userName error', async (done) => {
+    const userNameError = {
+      userName: "",
+      userSector: demand.userID,
+      userID: demand.userID,
+      description: "Descrição da Atualização de Demanda",
+      visibilityRestriction: true,
+      important: false,
+    };
+    const res = await request(app).put(`/demand/update-demand-update/${id}`).set('x-access-token', token).send(userNameError);
+    expect(res.statusCode).toBe(400);
+    expect(res.body.status).toEqual(['invalid userName']);
+    done();
+  });
+  it('Update Demand Update description error', async (done) => {
+    const descriptionError = {
+      userName: "Nome do Usuário",
+      userSector: demand.userID,
+      userID: demand.userID,
+      description: "",
+      visibilityRestriction: true,
+      important: false,
+    };
+    const res = await request(app).put(`/demand/update-demand-update/${id}`).set('x-access-token', token).send(descriptionError);
+    expect(res.statusCode).toBe(400);
+    expect(res.body.status).toEqual(['invalid description']);
+    done();
+  });
+  it('Update Demand Update visibilityRestriction error', async (done) => {
+    const visibilityRestrictionError = {
+      userName: "Nome do Usuário",
+      userSector: demand.userID,
+      userID: demand.userID,
+      description: "Descrição da Atualização de Demanda",
+      visibilityRestriction: "",
+      important: false,
+    };
+    const res = await request(app).put(`/demand/update-demand-update/${id}`).set('x-access-token', token).send(visibilityRestrictionError);
+    expect(res.statusCode).toBe(400);
+    expect(res.body.status).toEqual(['invalid visibilityRestriction']);
+    done();
+  });
+  it('Update Demand Update sectorID error', async (done) => {
+    const sectorIDError = {
+      userName: "Nome do Usuário",
+      description: "Descrição da Atualização de Demanda",
+      userID: demand.userID,
+      visibilityRestriction: true,
+      userSector: "",
+      important: false,
+    };
+    const res = await request(app).put(`/demand/update-demand-update/${id}`).set('x-access-token', token).send(sectorIDError);
+    expect(res.statusCode).toBe(400);
+    expect(res.body.status).toEqual(['invalid sector']);
+    done();
+  });
+  it('Update Demand Update ID error', async (done) => {
+    const demandUpdateIDError = {
+      userName: "Usuário X",
+      userID: demand.userID,
+      description: "Descrição Teste",
+      visibilityRestriction: true,
+      important: false,
+      userSector: demand.userID,
+    };
+    const res = await request(app).put(`/demand/update-demand-update/123`).set('x-access-token', token).send(demandUpdateIDError);
+    expect(res.statusCode).toBe(200);
+    done();
+  });
+  it('Update Demand Update userID error', async (done) => {
+    const sectorIDError = {
+      userName: "Nome do usuário",
+      description: "Descrição da Atualização de Demanda",
+      userID: "",
+      visibilityRestriction: true,
+      userSector: demand.userID,
+      important: false,
+    };
+    const res = await request(app).put(`/demand/update-demand-update/${id}`).set('x-access-token', token).send(sectorIDError);
+    expect(res.statusCode).toBe(400);
+    expect(res.body.status).toEqual(['invalid user']);
+    done();
+  });
+  it('Update Demand Update important error', async (done) => {
+    const sectorIDError = {
+      userName: "Nome do Usuário",
+      description: "Descrição da Atualização de Demanda",
+      userID: demand.userID,
+      visibilityRestriction: true,
+      userSector: demand.userID,
+      important: "",
+    };
+    const res = await request(app).put(`/demand/update-demand-update/${id}`).set('x-access-token', token).send(sectorIDError);
+    expect(res.statusCode).toBe(400);
+    expect(res.body.status).toEqual(['invalid important']);
+    done();
+  }); 
+  it('Delete Demand Update', async (done) => {
+    const demandUpdate = {
+      userName: "Nome do usuário",
+      userSector: demand.userID,
+      userID: demand.userID,
+      description: "Descrição da Atualização de Demanda",
+      visibilityRestriction: true,
+      important: false,
+    };
+    const res = await request(app).put(`/demand/delete-demand-update/${id}`).set('x-access-token', token)
+    expect(res.statusCode).toBe(200);
+    expect(res.body.userName).toBe(undefined);
+    expect(res.body.userSector).toBe(undefined);
+    expect(res.body.userID).toBe(demandUpdate.userID);
+    expect(res.body.description).toBe('Retirar documento na DPSS');
+    expect(res.body.visibilityRestriction).toBe(undefined);
+    expect(res.body.important).toBe(undefined);
+    done();
+  });
+  it('Delete Demand Update Error', async (done) => {
+    const res = await request(app).put(`/demand/delete-demand-update/1234561230`).set('x-access-token', token)
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toEqual({ "err": "failure" });
+    done();
+  });
   // Delete category tests comes for last, that's important
   it('Delete category', async (done) => {
     const res = await request(app).delete(`/category/delete/${category_id}`).set('x-access-token', token)
@@ -797,7 +918,7 @@ describe('Sample Test', () => {
     done();
   });
 });
- 
+
 afterAll(async (done) => {
   done();
 });
