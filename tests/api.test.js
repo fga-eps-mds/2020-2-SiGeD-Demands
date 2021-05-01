@@ -1,4 +1,5 @@
 const request = require('supertest');
+const moment = require('moment-timezone');
 const app = require('../src/index');
 const jwt = require('jsonwebtoken');
 const { categoryId } = require('../src/Controllers/CategoryController');
@@ -917,7 +918,80 @@ describe('Sample Test', () => {
     expect(res.body).toEqual({ "message": "Demand not found" });
     done();
   });
-});
+
+  const alert = {
+    name: 'Alerta',
+    description: 'Descrição',
+    date: `${(moment.utc(moment.tz('America/Sao_Paulo').add(5, 'days').format('YYYY-MM-DD')).toDate())}`,
+    alertClient: true,
+    demandID: '000000000abcdefgh',
+    sectorID: 'abcdefgh000000000'
+  };
+
+  let alert_demand_id;
+  let alert_sector_id;
+
+  it('Post alert', async (done) => {
+    const res = await request(app).post('/alert/create').set('x-access-token', token).send(alert);
+    expect(res.statusCode).toBe(200);
+    expect(res.body.name).toBe(alert.name);
+    expect(res.body.description).toBe(alert.description);
+    expect(res.body.date).toBe(alert.date);
+    expect(res.body.alertClient).toBe(alert.alertClient);
+    expect(res.body.demandID).toBe(alert.demandID);
+    expect(res.body.sectorID).toBe(alert.sectorID);
+    alert_demand_id = res.body.demandID;
+    alert_sector_id = res.body.sectorID;
+    done();
+  });
+
+  const alertError = {
+  };
+
+  it('Post alert validation error', async (done) => {
+    const res = await request(app).post('/alert/create').set('x-access-token', token).send(alertError);
+    expect(res.statusCode).toBe(400);
+    expect(res.body.status).toEqual(['invalid name', 'invalid description', 'invalid date', 'invalid demandID', 'invalid sectorID']);
+    done();
+  });
+
+  it('Get alerts', async (done) => {
+    const res = await request(app).get('/alert').set('x-access-token', token);
+    expect(res.statusCode).toBe(200);
+    expect(res.body[res.body.length - 1].name).toBe(alert.name);
+    expect(res.body[res.body.length - 1].date).toBe(alert.date);
+    expect(res.body[res.body.length - 1].alertClient).toBe(alert.alertClient);
+    expect(res.body[res.body.length - 1].description).toBe(alert.description);
+    expect(res.body[res.body.length - 1].sectorID).toBe(alert.sectorID);
+    expect(res.body[res.body.length - 1].demandID).toBe(alert.demandID);
+    done();
+  });
+
+  it('Get alerts by demand', async (done) => {
+    const res = await request(app).get(`/alert/demand/${alert_demand_id}`).set('x-access-token', token);
+    expect(res.statusCode).toBe(200);
+    expect(res.body[res.body.length - 1].date).toBe(alert.date);
+    expect(res.body[res.body.length - 1].name).toBe(alert.name);
+    expect(res.body[res.body.length - 1].description).toBe(alert.description);
+    expect(res.body[res.body.length - 1].demandID).toBe(alert.demandID);
+    expect(res.body[res.body.length - 1].alertClient).toBe(alert.alertClient);
+    expect(res.body[res.body.length - 1].sectorID).toBe(alert.sectorID);
+    done();
+  });
+
+  it('Get alerts by sector', async (done) => {
+    const res = await request(app).get(`/alert/sector/${alert_sector_id}`).set('x-access-token', token);
+    expect(res.statusCode).toBe(200);
+    expect(res.body[res.body.length - 1].name).toBe(alert.name);
+    expect(res.body[res.body.length - 1].demandID).toBe(alert.demandID);
+    expect(res.body[res.body.length - 1].date).toBe(alert.date);
+    expect(res.body[res.body.length - 1].description).toBe(alert.description);
+    expect(res.body[res.body.length - 1].alertClient).toBe(alert.alertClient);
+    expect(res.body[res.body.length - 1].sectorID).toBe(alert.sectorID);
+    done();
+  });
+
+})
 
 afterAll(async (done) => {
   done();

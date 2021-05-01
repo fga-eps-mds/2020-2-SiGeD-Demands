@@ -4,6 +4,7 @@ const { verifyJWT } = require('./Utils/functionsJWT');
 const routes = express.Router();
 const CategoryController = require('./Controllers/CategoryController');
 const DemandController = require('./Controllers/DemandController');
+const AlertController = require('./Controllers/AlertController');
 
 routes.get('/category', verifyJWT, CategoryController.categoryGet);
 routes.get('/category/:id', verifyJWT, CategoryController.categoryId);
@@ -24,4 +25,9 @@ routes.put('/demand/delete-demand-update/:id', verifyJWT, DemandController.delet
 routes.get('/demand/history/:id', verifyJWT, DemandController.history);
 routes.get('/statistic/category', verifyJWT, DemandController.demandsCategoriesStatistic);
 routes.get('/statistic/sector', verifyJWT, DemandController.demandsSectorsStatistic);
+routes.post('/alert/create', verifyJWT, AlertController.alertCreate);
+routes.get('/alert', verifyJWT, AlertController.alertGet);
+routes.get('/alert/demand/:demandID', verifyJWT, AlertController.alertGetByDemandId);
+routes.get('/alert/sector/:sectorID', verifyJWT, AlertController.alertGetBySectorId);
+
 module.exports = routes;

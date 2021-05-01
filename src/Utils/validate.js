@@ -30,6 +30,24 @@ const validateCategory = (name, description, color) => {
   return errors;
 };
 
+const validateAlert = (name, description, date, demandID, sectorID) => {
+  const errors = [];
+
+  if (!name) {
+    errors.push('invalid name');
+  } if (!description) {
+    errors.push('invalid description');
+  } if (!date) {
+    errors.push('invalid date');
+  } if (!demandID) {
+    errors.push('invalid demandID');
+  } if (!sectorID) {
+    errors.push('invalid sectorID');
+  }
+
+  return errors;
+};
+
 const validateDemand = (
   name, description, categoryID, sectorID, clientID, userID,
 ) => {
@@ -76,6 +94,7 @@ const validateDemandUpdate = (
 
 module.exports = {
   validateCategory,
+  validateAlert,
   validateDemand,
   validateOpen,
   validateDemandUpdate,
