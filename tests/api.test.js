@@ -4,7 +4,6 @@ const app = require('../src/index');
 const jwt = require('jsonwebtoken');
 const { categoryId } = require('../src/Controllers/CategoryController');
 const mongoose = require('mongoose');
-const moment = require('moment')
 
 describe('Sample Test', () => {
   // Saving categories ids to use when create demands constants
@@ -400,7 +399,6 @@ describe('Sample Test', () => {
       userID: '6089c3538dfebe00555bc17e'
     }
     const resDemand = await request(app).post('/demand/create').set('x-access-token', token).send(statisticDemand);
-    console.log(resDemand.body);
     const res = await request(app).get(`/statistic/category?idCategory=${idSts}&idSector=null&initialDate=${'01-01-2021'}&finalDate=${moment().format('YYYY-MM-DD')}`)
     .set('x-access-token', token);
     const lastIdx = res.body.length - 1;
@@ -427,7 +425,6 @@ describe('Sample Test', () => {
       userID: '6089c3538dfebe00555bc17e'
     }
     const resDemand = await request(app).post('/demand/create').set('x-access-token', token).send(statisticDemand);
-    console.log(resDemand.body);
     const res = await request(app).get(`/statistic/category?idCategory=${idSts}&idSector=106d094f9186b600486c5048&initialDate=${'01-01-2021'}&finalDate=${moment().format('YYYY-MM-DD')}`)
     .set('x-access-token', token);
     const lastIdx = res.body.length - 1;
