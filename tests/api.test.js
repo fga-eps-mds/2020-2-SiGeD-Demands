@@ -382,22 +382,6 @@ describe('Sample Test', () => {
     done();
   })
 
-  // it('Get category statistics filtered by sector', async (done) => {
-  //   const res = await request(app).get('/statistic/category?id=6064ffa9942d5e008c0734dc').set('x-access-token', token);
-  //   const lastIdx = res.body.length - 1;
-  //   expect(res.statusCode).toBe(200);
-  //   expect(res.body[lastIdx].demandas).toBe(1);
-  //   done();
-  // })
-
-  // it('Get sector statistics', async (done) => {
-  //   const res = await request(app).get('/statistic/sector?id=null').set('x-access-token', token);
-  //   const lastIdx = res.body.length - 1;
-  //   expect(res.statusCode).toBe(200);
-  //   expect(res.body[lastIdx].total).toBe(1);
-  //   done();
-  // })
-
   it('Get category statistics filtered by category', async (done) => {
     const statisticCategory = {
       name: 'Categoria de estatistica',
@@ -413,9 +397,10 @@ describe('Sample Test', () => {
       categoryID: [idSts],
       sectorID: '606d094f9186b600486c5048',
       clientID: '6054dacb934bd000d7ca623b',
-      userID: '60578028cb9349004580fb8d'
+      userID: '6089c3538dfebe00555bc17e'
     }
     const resDemand = await request(app).post('/demand/create').set('x-access-token', token).send(statisticDemand);
+    console.log(resDemand.body);
     const res = await request(app).get(`/statistic/category?idCategory=${idSts}&idSector=null&initialDate=${'01-01-2021'}&finalDate=${moment().format('YYYY-MM-DD')}`)
     .set('x-access-token', token);
     const lastIdx = res.body.length - 1;
@@ -424,7 +409,7 @@ describe('Sample Test', () => {
     done();
   })
 
-  it('Get category statistics filtered by category', async (done) => {
+  it('Get category statistics filtered by category and sector', async (done) => {
     const statisticCategory = {
       name: 'Categoria de estatistica',
       description: 'Categoria sobre as estatistica',
@@ -439,9 +424,10 @@ describe('Sample Test', () => {
       categoryID: [idSts],
       sectorID: '106d094f9186b600486c5048',
       clientID: '6054dacb934bd000d7ca623b',
-      userID: '60578028cb9349004580fb8d'
+      userID: '6089c3538dfebe00555bc17e'
     }
     const resDemand = await request(app).post('/demand/create').set('x-access-token', token).send(statisticDemand);
+    console.log(resDemand.body);
     const res = await request(app).get(`/statistic/category?idCategory=${idSts}&idSector=106d094f9186b600486c5048&initialDate=${'01-01-2021'}&finalDate=${moment().format('YYYY-MM-DD')}`)
     .set('x-access-token', token);
     const lastIdx = res.body.length - 1;
