@@ -27,6 +27,8 @@ routes.get('/demand/history/:id', verifyJWT, DemandController.history);
 routes.get('/statistic/category', verifyJWT, DemandController.demandsCategoriesStatistic);
 routes.get('/statistic/sector', verifyJWT, DemandController.demandsSectorsStatistic);
 routes.post('/alert/create', verifyJWT, AlertController.alertCreate);
+routes.put('/alert/update/:id', verifyJWT, AlertController.alertUpdate);
+routes.delete('/alert/delete/:id', verifyJWT, AlertController.alertDelete);
 routes.get('/alert', verifyJWT, AlertController.alertGet);
 routes.get('/alert/demand/:demandID', verifyJWT, AlertController.alertGetByDemandId);
 routes.get('/alert/sector/:sectorID', verifyJWT, AlertController.alertGetBySectorId);
