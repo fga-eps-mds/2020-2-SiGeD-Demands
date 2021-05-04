@@ -40,8 +40,8 @@ const alertGetBySectorId = async (req, res) => {
   try {
     const alerts = await Alert.find({ sectorID });
     alerts.forEach((alert) => {
-      if (moment(alert.date).isSameOrBefore(sevenDaysAfter)) {
-        if (moment(alert.date).isSameOrAfter(dateNow)) {
+      if (moment(alert.date).isSameOrBefore(sevenDaysAfter) || alert.checkbox === false) {
+        if (moment(alert.date).isSameOrAfter(dateNow) || alert.checkbox === false) {
           filteredAlerts.push(alert);
         }
       }
@@ -97,7 +97,7 @@ const alertUpdate = async (req, res) => {
       name,
       description,
       date,
-      alertClient, 
+      alertClient,
       demandID,
       sectorID,
       updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
@@ -121,6 +121,35 @@ const alertDelete = async (req, res) => {
   }
 };
 
+const alertUpdateCheckbox = async (req, res) => {
+  const { id } = req.params;
+  const {
+    name, description, date, alertClient, checkbox, demandID, sectorID,
+  } = req.body;
+
+  const validFields = validation.validateAlert(name, description, date, demandID, sectorID);
+
+  if (validFields.length) {
+    return res.status(400).json({ status: validFields });
+  }
+
+  try {
+    const updateStatus = await Alert.findOneAndUpdate({ _id: id }, {
+      name,
+      description,
+      date,
+      alertClient,
+      checkbox,
+      demandID,
+      sectorID,
+      updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
+    }, { new: true }, (user) => user);
+    return res.json(updateStatus);
+  } catch {
+    return res.status(400).json({ err: 'invalid id' });
+  }
+};
+
 module.exports = {
-  alertGet, alertCreate, alertGetByDemandId, alertGetBySectorId, alertUpdate, alertDelete,
+  alertGet, alertCreate, alertGetByDemandId, alertGetBySectorId, alertUpdate, alertDelete, alertUpdateCheckbox,
 };
