@@ -83,7 +83,7 @@ const alertCreate = async (req, res) => {
 const alertUpdate = async (req, res) => {
   const { id } = req.params;
   const {
-    name, description, date, alertClient, demandID, sectorID,
+    name, description, date, alertClient, checkbox, demandID, sectorID,
   } = req.body;
 
   const validFields = validation.validateAlert(name, description, date, demandID, sectorID);
@@ -98,6 +98,7 @@ const alertUpdate = async (req, res) => {
       description,
       date,
       alertClient,
+      checkbox,
       demandID,
       sectorID,
       updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
