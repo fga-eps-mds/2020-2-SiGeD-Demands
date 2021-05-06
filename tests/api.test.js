@@ -50,6 +50,10 @@ describe('Sample Test', () => {
       userID: '6089c3538dfebe00555bc17e'
     }
     const res = await request(app).post('/demand/create').set('x-access-token', token).send(demand);
+    await request(app).post('/demand/create').set('x-access-token', token).send(demand);
+    await request(app).post('/demand/create').set('x-access-token', token).send(demand);
+    await request(app).post('/demand/create').set('x-access-token', token).send(demand);
+    await request(app).post('/demand/create').set('x-access-token', token).send(demand);
     demand_id = res.body._id;
   })
 
@@ -57,6 +61,13 @@ describe('Sample Test', () => {
   // Test API:
   it('App is defined', (done) => {
     expect(app).toBeDefined();
+    done();
+  });
+
+  it('Get newest four demands', async (done) => {
+    const res = await request(app).get('/demand/newest-four').set('x-access-token', token);
+    expect(res.statusCode).toBe(200);
+    expect(res.body.length).toBe(4);
     done();
   });
 
