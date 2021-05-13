@@ -18,7 +18,9 @@ jobs:
         script: |
           cd 2020-2-SiGeD-Demands
           docker-compose down
+          git checkout .env
           git checkout master
-          git pull origin master
+          git pull origin master -f
+          cp prod.env .env
           docker-compose up --build -d
 
