@@ -525,6 +525,12 @@ const history = async (req, res) => {
   }
 };
 
+const newestFourDemandsGet = async (req, res) => {
+  const demands = await Demand.find().limit(4).sort({ createdAt: -1 });
+
+  return res.status(200).json(demands);
+};
+
 module.exports = {
   demandGet,
   demandCreate,
@@ -540,4 +546,5 @@ module.exports = {
   demandsCategoriesStatistic,
   demandsSectorsStatistic,
   history,
+  newestFourDemandsGet,
 };

@@ -12,6 +12,7 @@ routes.post('/category/create', verifyJWT, CategoryController.categoryCreate);
 routes.put('/category/update/:id', verifyJWT, CategoryController.categoryUpdate);
 routes.delete('/category/delete/:id', verifyJWT, CategoryController.categoryDelete);
 routes.get('/demand', verifyJWT, DemandController.demandGet);
+routes.get('/demand/newest-four', verifyJWT, DemandController.newestFourDemandsGet);
 routes.get('/demand/:id', verifyJWT, DemandController.demandId);
 routes.post('/demand/create', verifyJWT, DemandController.demandCreate);
 routes.put('/demand/update/:id', verifyJWT, DemandController.demandUpdate);

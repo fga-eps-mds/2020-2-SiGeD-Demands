@@ -1,4 +1,4 @@
-const { APIClients } = require('./baseService.js');
+const { APIClients } = require('./baseService');
 
 const getClients = async (token) => {
   try {
