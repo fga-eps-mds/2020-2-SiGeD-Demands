@@ -109,7 +109,6 @@ const alertUpdate = async (req, res) => {
   }
 };
 
-
 const alertDelete = async (req, res) => {
   const { id } = req.params;
 
@@ -122,35 +121,6 @@ const alertDelete = async (req, res) => {
   }
 };
 
-const alertUpdateCheckbox = async (req, res) => {
-  const { id } = req.params;
-  const {
-    name, description, date, alertClient, checkbox, demandID, sectorID,
-  } = req.body;
-
-  const validFields = validation.validateAlert(name, description, date, demandID, sectorID);
-
-  if (validFields.length) {
-    return res.status(400).json({ status: validFields });
-  }
-
-  try {
-    const updateStatus = await Alert.findOneAndUpdate({ _id: id }, {
-      name,
-      description,
-      date,
-      alertClient,
-      checkbox,
-      demandID,
-      sectorID,
-      updatedAt: moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate(),
-    }, { new: true }, (user) => user);
-    return res.json(updateStatus);
-  } catch {
-    return res.status(400).json({ err: 'invalid id' });
-  }
-};
-
 module.exports = {
-  alertGet, alertCreate, alertGetByDemandId, alertGetBySectorId, alertUpdate, alertDelete, alertUpdateCheckbox,
+  alertGet, alertCreate, alertGetByDemandId, alertGetBySectorId, alertUpdate, alertDelete,
 };
