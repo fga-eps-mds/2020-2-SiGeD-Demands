@@ -18,6 +18,11 @@ const alertSchema = new mongoose.Schema({
     require: true,
     default: false,
   },
+  checkbox: {
+    type: Boolean,
+    require: true,
+    default: false,
+  },
   demandID: {
     type: String,
     require: true,

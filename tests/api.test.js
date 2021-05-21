@@ -997,6 +997,7 @@ describe('Sample Test', () => {
     expect(res.body.sectorID).toBe(alert.sectorID);
     alert_demand_id = res.body.demandID;
     alert_sector_id = res.body.sectorID;
+    alert_id = res.body._id;
     done();
   });
 
@@ -1043,6 +1044,109 @@ describe('Sample Test', () => {
     expect(res.body[res.body.length - 1].description).toBe(alert.description);
     expect(res.body[res.body.length - 1].alertClient).toBe(alert.alertClient);
     expect(res.body[res.body.length - 1].sectorID).toBe(alert.sectorID);
+    done();
+  });
+
+  it('Update alert', async () => {
+    const alert = {
+      name: "alerta numero 1",
+      description: "lembrar joao",
+      date: `${(moment.utc(moment.tz('America/Sao_Paulo').add(3, 'days').format('YYYY-MM-DD')).toDate())}`,
+      alertClient: true,
+      demandID: '000000000abcdefgh',
+      sectorID: 'abcdefgh000000000'
+    };
+    const res = await request(app)
+      .put(`/alert/update/${alert_id}`)
+      .set('x-access-token', token)
+      .send(alert);
+    expect(res.statusCode).toBe(200);
+    expect(res.body.name).toBe(alert.name);
+    expect(res.body.description).toBe(alert.description);
+    expect(res.body.date).toBe(alert.date);
+    expect(res.body.alertClient).toBe(alert.alertClient);
+    expect(res.body.demandID).toBe(alert.demandID);
+    expect(res.body.sectorID).toBe(alert.sectorID);
+  });
+
+  it('Update alert error', async () => {
+    const alert = {
+      name: "",
+      description: "Jest description",
+      date: `${(moment.utc(moment.tz('America/Sao_Paulo').add(5, 'days').format('YYYY-MM-DD')).toDate())}`,
+      alertClient: true,
+      demandID: '000000000abcdefgh',
+      sectorID: 'abcdefgh000000000'
+    }
+    const res = await request(app)
+      .put(`/alert/update/${alert_id}`)
+      .set('x-access-token', token)
+      .send(alert);
+    expect(res.statusCode).toBe(400);
+    expect(res.body.status).toEqual(['invalid name']);
+  });
+
+  it('Update alert with invalid id', async () => {
+    const alert = {
+      name: "porte de arma",
+      description: "avaliação psicológica",
+      date: `${(moment.utc(moment.tz('America/Sao_Paulo').add(5, 'days').format('YYYY-MM-DD')).toDate())}`,
+      alertClient: true,
+      demandID: '000000000abcdefgh',
+      sectorID: 'abcdefgh000000000'
+    };
+    const res = await request(app)
+      .put(`/alert/update/123abc`)
+      .set('x-access-token', token)
+      .send(alert)
+    expect(res.statusCode).toBe(400);
+    expect(res.body.err).toBe('invalid id')
+  });
+
+  it('Update alert without token', async () => {
+    const alert = {
+      name: "Jest test",
+      description: "Jest description",
+      date: `${(moment.utc(moment.tz('America/Sao_Paulo').add(5, 'days').format('YYYY-MM-DD')).toDate())}`,
+      alertClient: true,
+      demandID: '000000000abcdefgh',
+      sectorID: 'abcdefgh000000000'
+    }
+    const res = await request(app)
+      .put(`/alert/update/${alert_id}`)
+      .send(alert);
+    expect(res.statusCode).toBe(401);
+    expect(res.body).toEqual({ auth: false, errorCode: 401, message: 'No token was provided' });
+  });
+
+  it('Update alert with invalid token', async () => {
+    const tokenFalho = 'abc123';
+    const alert = {
+      name: "Jest test",
+      description: "Jest description",
+      date: `${(moment.utc(moment.tz('America/Sao_Paulo').add(5, 'days').format('YYYY-MM-DD')).toDate())}`,
+      alertClient: true,
+      demandID: '000000000abcdefgh',
+      sectorID: 'abcdefgh000000000'
+    }
+    const res = await request(app)
+      .put(`/alert/update/${alert_id}`)
+      .set('x-access-token', tokenFalho)
+      .send(alert);
+    expect(res.statusCode).toBe(401);
+    expect(res.body).toEqual({ auth: false, message: 'It was not possible to authenticate the token.' });
+  });
+
+  it('Delete alert', async (done) => {
+    const res = await request(app).delete(`/alert/delete/${alert_id}`).set('x-access-token', token)
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual({ "message": "success" });
+    done();
+  });
+  it('Delete alert error', async (done) => {
+    const res = await request(app).delete('/alert/delete/09876543210987654321').set('x-access-token', token)
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toEqual({ "message": "failure" });
     done();
   });
 
