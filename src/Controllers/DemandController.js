@@ -233,6 +233,7 @@ const demandCreate = async (req, res) => {
     }
     const date = moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate();
     const retroactiveDate = moment(demandDate).toDate();
+    retroactiveDate.setHours(date.getHours(), date.getMinutes(), date.getSeconds());
 
     const newDemand = await Demand.create({
       name,
