@@ -215,7 +215,7 @@ const demandsSectorsStatistic = async (req, res) => {
 const demandCreate = async (req, res) => {
   try {
     const {
-      name, description, process, categoryID, sectorID, clientID, userID,
+      name, description, process, categoryID, sectorID, clientID, userID, demandDate,
     } = req.body;
 
     const validFields = validation.validateDemand(
@@ -232,6 +232,8 @@ const demandCreate = async (req, res) => {
       return res.status(400).json({ message: user.error });
     }
     const date = moment.utc(moment.tz('America/Sao_Paulo').format('YYYY-MM-DDTHH:mm:ss')).toDate();
+    const retroactiveDate = moment(demandDate).toDate();
+
     const newDemand = await Demand.create({
       name,
       description,
@@ -249,7 +251,7 @@ const demandCreate = async (req, res) => {
         date,
         label: 'created',
       },
-      createdAt: date,
+      createdAt: demandDate ? retroactiveDate : date,
       updatedAt: date,
     });
 
