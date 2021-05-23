@@ -20,10 +20,31 @@ A documentação do projeto pode ser acessada pelo nosso site em https://fga-eps
 Todas as funções adicionadas nessa API devem ser testadas, o repositŕorio aceita até 10% do total de lihas não testadas. Para rodar os testes nesse repositŕio deve ser executado o comando:
 
 ```bash
-docker-compose run api_clients bash -c  "yarn && yarn jest --coverage --forceExit"
+docker-compose run api_demands bash -c  "yarn && yarn jest --coverage --forceExit"
 ```
 
 ## Como rodar?
+
+O arquivo .env possui configurações iniciais que podem ser alteradas de acordo com a necessidade. São elas:
+ - SECRET: chave para criptografia das senhas
+ - CLIENTS_URL: 
+ - USERS_URL: 
+ - DB_USER: usuário de acesso ao banco de dados
+ - DB_PASS: senha de acesso ao banco de dados
+ - DB_NAME: nome da base de dados
+ - DB_HOST: host da base de dados
+
+Veja o exemplo abaixo:
+
+```
+SECRET=chavedesegredo
+CLIENTS_URL=backend_clients
+USERS_URL=backend_users
+DB_USER=api_user
+DB_PASS=api_password
+DB_NAME=api_database
+DB_HOST=db_demands
+```
 
 Para rodar a API é preciso usar os seguintes comandos usando o docker:
 
@@ -64,11 +85,11 @@ Para receber as últimas quatro demandas demandas listadas.
 
 **GET: `/clientsNames`**
 
-Para receber os nomes dos clientes.
+Para receber as demandas com os nomes dos clientes.
 
 **GET: `/demand/history/:id`**
 
-Para receber o histórico de demandas.
+Para receber o histórico de uma demanda específica utilizando o `id`.
 
 **GET: `/statistic/category`**
 
@@ -92,7 +113,7 @@ Para receber os dados dos alertas pelo `id` do setor.
 
 **POST: `/category/create`**
 
-Para criar uma nova categorias, envie os dados nesse formato:
+Para criar uma nova categoria, envie os dados nesse formato:
 
 ```json
 {
@@ -104,7 +125,7 @@ Para criar uma nova categorias, envie os dados nesse formato:
 
 **POST: `/demand/create`**
 
-Para criar uma nova categorias, envie os dados nesse formato:
+Para criar uma nova demanda, envie os dados nesse formato:
 
 ```json
 {
@@ -112,9 +133,9 @@ Para criar uma nova categorias, envie os dados nesse formato:
     "description": "Descrição da demanda",
     "process": "43017",
     "sectorID": "6074c01561b3ce0040c55222",
-		"clientID": "6078cf89f3be730047d7d618",
-		"userID": "608a32ff3b3afd003fa6b37e",
-		"categoryID": ["6074bfadd1d77900489f67d5"]
+	"clientID": "6078cf89f3be730047d7d618",
+	"userID": "608a32ff3b3afd003fa6b37e",
+	"categoryID": ["6074bfadd1d77900489f67d5"]
 }
 ```
 
@@ -140,7 +161,7 @@ Para atualizar os dados de uma categoria, envie os dados atualizados seguindo o 
 
 ```json
 {
-    "name": "Nome da categoria",
+    "name": "Nome da categoria atualizado",
     "description": "Descrição da categoria",
     "color": "#000000"
 }
@@ -156,34 +177,35 @@ Para atualizar os dados de uma demanda, envie os dados atualizados seguindo o pa
     "description": "Descrição da demanda atualizada",
     "process": "43012",
     "sectorID": "6074c01561b3ce0040c55222",
-		"clientID": "6078cf89f3be730047d7d618",
-		"userID": "608a32ff3b3afd003fa6b37e",
-		"categoryID": ["6074bfadd1d77900489f67d5"]
+	"clientID": "6078cf89f3be730047d7d618",
+	"userID": "608a32ff3b3afd003fa6b37e",
+	"categoryID": ["6074bfadd1d77900489f67d5"]
 }
 ```
 
 **PUT: `/demand/sectorupdate/:id`**
 
-
+Para atualizar o setor de uma demanda.
 
 ```json
-
+{
+ 	"sectorID": "1283719487924"
+}
 ```
 
 **PUT: `/demand/forward/:id`**
 
-
+Para encaminhar uma demanda para outro setor, envie os dados atualizados seguindo o padrão:
 
 ```json
-
+{
+ 	"sectorID": "12871837283"
+}
 ```
 
 **PUT: `/demand/toggle/:id`**
 
-
-```json
-
-```
+Utilizado para ativar ou desativar uma demanda.
 
 **PUT: `/demand/create-demand-update/:id`**
 
@@ -192,8 +214,9 @@ Para criar uma atualização da demanda.
 ```json
 {
 	"userName": "Nome",
-	"description": "Descrição da demanda",
-	"visibilityRestriction": true
+	"description": "Descrição da atualização",
+	"visibilityRestriction": true,
+	"important": true,
 }
 ```
 
@@ -205,7 +228,8 @@ Para atualizar a atualização da demanda.
 {
 	"userName": "Nome",
 	"description": "Descrição atualizada",
-	"visibilityRestriction": true
+	"visibilityRestriction": true,
+	"important": true,
 }
 ```
 
