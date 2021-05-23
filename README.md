@@ -26,13 +26,15 @@ docker-compose run api_demands bash -c  "yarn && yarn jest --coverage --forceExi
 ## Como rodar?
 
 O arquivo .env possui configurações iniciais que podem ser alteradas de acordo com a necessidade. São elas:
- - SECRET: chave para criptografia das senhas
- - CLIENTS_URL: 
- - USERS_URL: 
- - DB_USER: usuário de acesso ao banco de dados
- - DB_PASS: senha de acesso ao banco de dados
- - DB_NAME: nome da base de dados
- - DB_HOST: host da base de dados
+ - SECRET: chave para criptografia das senhas.
+ - CLIENTS_URL: conexão entre a api de demandas e clientes.
+ - USERS_URL: conexão entre a api de usuários e clientes.
+ - DB_USER: usuário de acesso ao banco de dados.
+ - DB_PASS: senha de acesso ao banco de dados.
+ - DB_NAME: nome da base de dados.
+ - DB_HOST: host da base de dados.
+
+Se os servidores mudarem, deve-se colocar o IP os campos CLIENTS_URL e USERS_URL.
 
 Veja o exemplo abaixo:
 
@@ -213,10 +215,11 @@ Para criar uma atualização da demanda.
 
 ```json
 {
-	"userName": "Nome",
-	"description": "Descrição da atualização",
-	"visibilityRestriction": true,
-	"important": true,
+    "userName": "edit",
+    "userSector": "607b48d22cb2cc0040c1765a",
+    "description": "edited 2 description",
+    "visibilityRestriction": false,
+    "updateListID": "607902e8e733220040b65f24"
 }
 ```
 
@@ -226,10 +229,11 @@ Para atualizar a atualização da demanda.
 
 ```json
 {
-	"userName": "Nome",
-	"description": "Descrição atualizada",
-	"visibilityRestriction": true,
-	"important": true,
+    "userName": "edit",
+    "userSector": "607b48d22cb2cc0040c1765a",
+    "description": "edited 2 description",
+    "visibilityRestriction": false,
+    "updateListID": "607902e8e733220040b65f24"
 }
 ```
 
